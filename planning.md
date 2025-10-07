@@ -266,39 +266,39 @@ The types of pirates and their dialogue responses will be similar to rock-paper-
 - Fresh attempt with 3 cargo portions
 - Randomized task/pirate timing for replayability
 
-# Player Movement Tests
+### Player Movement Tests
 - Verify left/right movement responds to all input keys (A, D, arrows)
 - Test boundary collision at ship edges (can't move beyond control module/cargo panel)
 - Confirm movement is disabled during pirate dialogue
 - Validate smooth acceleration/deceleration physics
 
-# Interaction System Tests
+### Interaction System Tests
 - Test interact button (E/Space) triggers on correct objects
 - Verify hold-to-complete mechanic fills progress bar accurately
 - Confirm items can be picked up and carried
 - Test interaction prompts appear/disappear at correct distances
 
-# Task Logic Tests
+### Task Logic Tests
 - Each task timer counts down correctly (60 seconds → 0)
 - Task completion stops timer and removes task
 - Task failure triggers correct game over state
 - Multiple concurrent tasks display properly
 
-# Pirate Dialogue Tests
+### Pirate Dialogue Tests
 - All three pirate types load correctly
 - Rock-paper-scissors logic works for each type (2 win conditions, 1 loss per pirate)
 - Cargo counter decrements on pirate victory
 - Dialogue choices navigate correctly with A/D/arrows
 
-# Game State Tests
+### Game State Tests
 - State transitions work (menu → playing → paused → game over)
 - Win condition triggers after appropriate duration/tasks
 - All four loss conditions trigger correct game over screens
 - Restart resets all variables properly
 
-# Input Validation Approach
+## Input Validation Approach
 
-## Keyboard Input Validation
+### Keyboard Input Validation
 - Test all control schemes work simultaneously:
   - WASD and arrow keys both functional for movement
   - Both E and Space work for interactions
@@ -307,21 +307,23 @@ The types of pirates and their dialogue responses will be similar to rock-paper-
 - Test rapid key presses don't break interaction system
 - Confirm input is properly disabled/enabled during state changes
 
-## Interaction Range Validation
+### Interaction Range Validation
 - Player must be within defined distance to interact with objects
 - Prompts only appear when in valid range
 - Out-of-range interactions are rejected gracefully
 
-## Timing Validation
+### Timing Validation
 - Task spawn intervals are within acceptable ranges
 - Pirate encounters don't overlap improperly
 - Timer values are accurate (1 minute = 60 seconds in-game)
 - No tasks spawn simultaneously if not intended
 
-## Edge Case Testing
+### Edge Case Testing
 - What happens if timer expires during pirate dialogue?
 - Can player move during task completion animation?
 - What if player pauses during critical moments?
 - Test all combinations of concurrent events
 
-
+## Class diagram
+[![Fig 2.0, Class Diagram](https://github.com/mitchellonii/oop-group-project-2025-s2/blob/mitchell/images/classDiagram.png?raw=true "Fig 2.0 Class Diagram")](https://github.com/mitchellonii/oop-group-project-2025-s2/blob/mitchell/images/classDiagram.png?raw=true "Fig 2.0 Class Diagram")
+>Fig 2.0 Class Diagram
