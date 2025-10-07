@@ -106,3 +106,222 @@ The types of pirates and their dialogue responses will be similar to rock-paper-
 <mark style="color:red">- Bug fixing from playtest feedback<br>- Code cleanup and documentation</mark>
 <mark style="color:orange">- Performance optimization<br>- Final integration testing<br>- Create final build</mark>
 <mark style="color:green">- Write README and documentation<br>- Prepare presentation
+
+
+
+# UI Features
+
+## Main HUD (Always Visible During Gameplay)
+- **Cargo Counter**
+  - Visual representation of your 3 "lives" (cargo portions remaining)
+  - Could be displayed as 3 cargo boxes/crates at the top of screen
+  - When pirates steal cargo, one box visually breaks/disappears
+  - Flashes red when cargo is stolen
+
+- **Task Timer Display**
+  - Appears when a task becomes active
+  - Large, prominent countdown (e.g., "0:45" remaining)
+  - Changes color as urgency increases:
+    - **Green:** >40 seconds remaining
+    - **Yellow:** 20-40 seconds
+    - **Red/Flashing:** <20 seconds
+  - Shows task name/icon above timer
+
+- **Current Objective Indicator**
+  - Small text box showing current priority, e.g., "Navigate to Control Module" or "Repair Tractor Beam"
+  - Arrow indicator pointing left/right to guide player to task location
+  - Pulsing highlight on the task object itself in the game world
+
+## Dialogue UI (Pirate Encounters)
+- **Dialogue Box Overlay**
+  - Semi-transparent dark overlay dims the game world
+  - Large dialogue box in center/bottom of screen
+  - Pirate portrait on one side, showing which type you're facing
+  - Pirate's dialogue text displayed with typewriter effect
+
+- **Choice Selection**
+  - Three clearly labeled options displayed as buttons
+    - Selected option highlights (border glow or color change)
+    - Visual indicator showing which key corresponds to which option
+    - Brief description of each approach (e.g., "Offer them credits")
+
+- **Outcome Display**
+  - After selection, shows result: "The pirate accepts!" or "The pirate is offended!"
+  - If successful: pirate leaves, cargo safe
+  - If failed: animation of cargo being stolen, cargo counter decreases
+
+## Menu Screens
+- **Main Menu**
+  - Pixelated space/ship background
+  - Game title: "SPACEFAIRER" in retro pixel font
+  - Options:
+    - "START DELIVERY"
+    - "HOW TO PLAY" (tutorial/instructions)
+    - "QUIT"
+  - Simple navigation with arrow keys or WASD
+
+- **Game Over Screens**
+  - Different screens based on failure type:
+    - Asteroid Collision: Ship exploding, "NAVIGATION FAILURE"
+    - Cargo Lost: Trailer floating away, "CARGO DETACHED"
+    - Safety Violation: Official notice, "TERMINATED BY SPACE OSHA"
+    - Pirates Won: Three broken cargo boxes, "CARGO STOLEN"
+  - Shows statistics: "Tasks Completed: X" "Pirates Defeated: X"
+  - Options: "TRY AGAIN" or "MAIN MENU"
+
+- **Victory Screen**
+  - "DELIVERY SUCCESSFUL!"
+  - Roggert celebrating
+  - Final stats displayed
+  - Potential score/rating system
+
+## Notification System
+- **Task Alerts**
+  - Pop-up notification when new task appears: "⚠️ NAVIGATION UPDATE REQUIRED"
+  - Appears at top of screen, fades after 2-3 seconds
+  - Accompanied by warning sound
+
+- **Pirate Warnings**
+  - "⚠️ INCOMING TRANSMISSION" when pirate is about to board
+  - 3-second warning before dialogue starts
+  - Gives player time to finish current action
+
+- **Status Messages**
+  - "Task Complete!" with checkmark
+  - "Cargo Secured" when successfully defeating pirate
+
+## User Flow
+
+### Game Start Flow
+1. Launch Game → Main Menu appears
+2. Select "START DELIVERY" → Brief loading/transition
+3. Intro Sequence (optional, can be skipped)
+   - Text: "Roggert Spacemin here, pilot of the Bongo Frontier..."
+   - "Today's delivery: 3 cargo containers to Sector 7..."
+   - Camera pans across the ship interior
+4. Game Begins → Player spawns in center of ship, full control
+
+### Typical Gameplay Loop
+- **Idle State**
+  - Player can move freely left/right exploring ship
+  - HUD shows cargo counter (3/3) and current position
+  - Ambient ship sounds playing
+
+- **Task Appears**
+  - Notification pops up: [task x has appeared]
+  - HUD updates: Timer appears (1:00), objective indicator points left
+  - Visual cue: Control module panel highlights/flashes
+  - Player must move to location
+
+- **Task Interaction**
+  - Player reaches task location
+  - Prompt appears: "Press E to xxxx"
+  - Player holds E
+  - Progress bar fills showing completion
+  - **Success:** "Task Complete!" notification, timer disappears
+  - **Failure:** Timer hits 0:00 → Game Over (associated fail sequence)
+
+- **Pirate Encounter**
+  - Game pauses player movement automatically
+  - Dialogue UI appears: Screen dims, pirate portrait shows, dialogue begins
+  - Example dialogue: "Well well, what do we have here? Hand over your cargo, spacer."
+
+- **Dialogue Choice**
+  - Player uses A/D or arrow keys to highlight choice
+  - Current selection glows/highlights
+  - Player presses E or Space to confirm
+
+- **Outcome**
+  - **Success:** "The pirate laughs and leaves" → Resume gameplay
+  - **Failure:** "The pirate scowls and grabs a cargo container" → Cargo counter drops (3/3 → 2/3) → Resume gameplay
+
+- **Multi-tasking Scenario**
+  - Timer already running for navigation task (0:30 left)
+  - Pirate boards during task
+  - Player must decide: finish task or deal with pirate first
+  - Creates tension and prioritization decisions
+
+### Victory Flow
+- **Deliver All Cargo**
+  - Player survives all encounters and tasks for set duration (or reaches destination)
+  - Screen fades to white
+
+- **Victory Screen**
+  - "DELIVERY SUCCESSFUL!"
+  - Stats display
+  - "TRY AGAIN" (restart) or "MAIN MENU"
+
+### Failure Flow
+- Timer reaches 0:00 or player fails third pirate encounter
+- Warning sound
+- Screen shakes violently
+- Associated animation
+- Screen goes black
+- Game Over screen: “[game over reason]”
+
+### Restart Flow (if time permits)
+- From any Game Over screen, select "TRY AGAIN"
+- Quick fade to black
+- Spawn back at start position
+- Fresh attempt with 3 cargo portions
+- Randomized task/pirate timing for replayability
+
+# Player Movement Tests
+- Verify left/right movement responds to all input keys (A, D, arrows)
+- Test boundary collision at ship edges (can't move beyond control module/cargo panel)
+- Confirm movement is disabled during pirate dialogue
+- Validate smooth acceleration/deceleration physics
+
+# Interaction System Tests
+- Test interact button (E/Space) triggers on correct objects
+- Verify hold-to-complete mechanic fills progress bar accurately
+- Confirm items can be picked up and carried
+- Test interaction prompts appear/disappear at correct distances
+
+# Task Logic Tests
+- Each task timer counts down correctly (60 seconds → 0)
+- Task completion stops timer and removes task
+- Task failure triggers correct game over state
+- Multiple concurrent tasks display properly
+
+# Pirate Dialogue Tests
+- All three pirate types load correctly
+- Rock-paper-scissors logic works for each type (2 win conditions, 1 loss per pirate)
+- Cargo counter decrements on pirate victory
+- Dialogue choices navigate correctly with A/D/arrows
+
+# Game State Tests
+- State transitions work (menu → playing → paused → game over)
+- Win condition triggers after appropriate duration/tasks
+- All four loss conditions trigger correct game over screens
+- Restart resets all variables properly
+
+# Input Validation Approach
+
+## Keyboard Input Validation
+- Test all control schemes work simultaneously:
+  - WASD and arrow keys both functional for movement
+  - Both E and Space work for interactions
+  - ESC triggers pause reliably
+- Verify no input conflicts (e.g., pressing multiple keys at once)
+- Test rapid key presses don't break interaction system
+- Confirm input is properly disabled/enabled during state changes
+
+## Interaction Range Validation
+- Player must be within defined distance to interact with objects
+- Prompts only appear when in valid range
+- Out-of-range interactions are rejected gracefully
+
+## Timing Validation
+- Task spawn intervals are within acceptable ranges
+- Pirate encounters don't overlap improperly
+- Timer values are accurate (1 minute = 60 seconds in-game)
+- No tasks spawn simultaneously if not intended
+
+## Edge Case Testing
+- What happens if timer expires during pirate dialogue?
+- Can player move during task completion animation?
+- What if player pauses during critical moments?
+- Test all combinations of concurrent events
+
+
