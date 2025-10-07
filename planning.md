@@ -2,7 +2,7 @@
 
 ## Use Case & Project Scope 
 
-Spacefairer is a pixelated 2D side-viewed orthographic game (similar to Terraria) that takes place inside a cargo ship.
+Spacefairer is a pixelated 2D side-viewed orthographic game that takes place inside a cargo ship.
 
 In this game you play as the protagonist, Roggert Spacemin - pilot of the Bongo Frontier, as they take loads of cargo across the cosmos.
 
