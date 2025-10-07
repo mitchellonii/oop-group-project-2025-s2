@@ -1,0 +1,44 @@
+classes mockup for Spacefairer
+
+class task{
+    private:
+        int timeTaken;
+        bool toolsNeeded;
+
+    public:
+        Task();
+        Task(int timeTaken, bool toolsNeeded);
+        int get_timeTaken;
+        bool get_toolsNeeded;
+
+        virtual void doTask;
+}
+
+
+class courseCorrection : public task{
+    private:
+        bool toolsNeeded = false;
+        int timeTaken = 5;
+    public:
+        void correctCourse;
+        //No idea how to program that yet, essentially I want it to disable player movement
+        and show a progress bar that fills over 5 seconds, then after that's done it re-enables player movement
+}
+class cargoFix : public task{
+    private:
+        bool toolsNeeded = false;
+        int timeTaken = 7;
+    public:
+        void cargoFix;
+        //Same deal, pauses player movement for 7 seconds and shows a progress bar
+}
+
+class handRailFix : public task{
+    private:
+        bool toolsNeeded = true;
+        int timeTaken = 10;
+    public:
+        void cargoFix;
+        //Checks if player has tools? pauses player movement for 10 seconds : else tells the player to get tools
+        // and highlights the toolbox
+}

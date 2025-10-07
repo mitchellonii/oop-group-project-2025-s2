@@ -1,0 +1,67 @@
+classes mockup for FIGHT ! PUNCH ! KILL !
+
+
+
+class player{
+    private:
+        int health
+        int meleeDamage
+        std::string name
+    protected:
+        std::string weapon
+    public:
+        virtual void PUNCH;
+        virtual void defaultAttack;
+        virtual void specialMove{};
+        virtual void chargedAttack{};
+        gets and sets
+}
+
+class Hackslasher : public player{ //thinking like a dps class, damage heavy but little defense
+    private:
+        std::string weapon; //just a string for flavouring
+        int speed; //a number between 1-5, each attack it gets a (speed) in 10 chance of dodging (eg speed = 4, 4/10 chance to dodge);
+    public:
+    defaultAttack: does low damage but is reliable
+    specialMove: deals 1.5* damage and make opponent bleed for one turn for 0.5* the damage
+    // cooldown 3 turns
+
+    chargedAttack: after 10 turns, do a spin attack that does 5* default damage and bleeds *0.5 for 3 turns
+    BLEED CLASS FUNCTION!!??
+
+}
+
+class Skullbreaker : public player{ //this ones more tank, armour and big damage, but everything charges slowly
+// and they're very easy to hit 
+    private:
+        std::string weapon; //flavour string again, boulder on a stick type fart
+        int armourClass; //all attacks hit, but you need to roll over the armour class to damage.
+                        // if you miss, it's flavoured that the attack glances off the armour and
+                        // the armour is damaged by minus one class
+    public:
+        defaultAttack: do 1.5* default damage, 10% chance to stun for one turn
+        specialMove: Turtle - hide for one turn to be immune to damage, regain default armour class.
+        if you turtle twice in a row you drop your weapon, then deal 0.5 damage the rest of the game.
+        //cooldown 5 turns
+
+        chargedAttack: after 10 turns, smack opponent to stun them for 3 turns
+        STUN CLASS FUNCTION
+
+}
+
+
+class Whizzbanger : public player{ //wizard/methhead with a gun. Shoots for 1.2* damage and needs to reload for a turn
+    private:
+        std::string weaponl //choice of three mega fucky gun types, oversawed shotgun, FIREMAN SAM, piss tool (just a yellow glock)
+        loadedAmmo;
+    public:
+        defaultAttack; do 1.2 damage and lose 1 loadedAmmo. If no loaded ammo, pistol whip for 0.8 damage
+        reload; reload weapon. if reloaded twice in a row, can do 2* damage. if reload 3 times gun explodes and Whizzbanger dies
+
+        chargedAttack; stuff as many bullets as possible into your gun and toss it at the enemy for 5 damage, and get a double-loaded
+        gun to deal 2 damage in the next turn.
+
+        reload function 
+
+}
+
