@@ -46,8 +46,11 @@ The types of pirates and their dialogue responses will be similar to rock-paper-
 ## Timeline
 
 ### Team Structure & Roles TBD
+
 <mark style="color:red">**Person A - Core Systems & Player Mechanics**</mark>
+
 <mark style="color:orange">**Person B - Tasks & Game Events**</mark>
+
 <mark style="color:green">**Person C - Pirates, UI & Polish**</mark>
 
 ------------
@@ -55,18 +58,27 @@ The types of pirates and their dialogue responses will be similar to rock-paper-
 ### Week 1: Core Systems & Foundation
 
 **Priority 1:**
+
 <mark style="color:red">- Set up project structure and development environment<br>- Implement base class system (GameController, RenderElement, PhysicsElement)</mark>
+
 <mark style="color:orange">- Design and create ship background art (control module to cargo trailer)<br>- Set up rendering pipeline for 2D pixelated graphics</mark>
+
 <mark style="color:green">- Design basic HUD layout (cargo counter, timer display)<br>- Create UI rendering system</mark>
 
 **Priority 2:**
+
 <mark style="color:red">- Implement Player class with left/right movement (A, D, arrow keys)<br>- Add collision detection for ship boundaries<br>- Create player sprite and basic animations (idle, walking)</mark>
+
 <mark style="color:orange">- Develop task highlight system<br>- Build timer framework (1-minute countdown system)<br>- Implement "Correct Course" task mechanic</mark>
+
 <mark style="color:green">- Create main menu/title screen mockups<br>- Design three pirate character sprites<br>- Create dialogue UI overlay mockup</mark>
 
 **Priority 3:**
+
 <mark style="color:red">- Implement interact button functionality (Space/E)<br>- Create Item class for pickable objects</mark>
+
 <mark style="color:orange">- Test and refine player movement feel<br>- Plan pirate dialogue tree structure</mark>
+
 <mark style="color:green">- Draft dialogue text for all three pirate types (bribe, sympathise, insult options)<br>- Create pirate boarding animation concept</mark>
 
 ------------
@@ -74,18 +86,27 @@ The types of pirates and their dialogue responses will be similar to rock-paper-
 ### Week 2: Tasks, Pirates & Game Mechanics
 
 **Priority 1:**
+
 <mark style="color:red">- Refine hold-to-complete interaction mechanic<br>- Create pickup and carry system for repair items</mark>
+
 <mark style="color:orange">- Implement "Cargo Tractor Beam Repair" task:<br>&nbsp;&nbsp;* Repair interaction mechanic<br>&nbsp;&nbsp;* Item pickup and placement</mark>
+
 <mark style="color:green">- Add visual feedback for interactions (highlights, animations)<br>- Implement dialogue UI overlay (fully functional)<br>- Build dialogue choice system (A, D, arrow key navigation)<br>- Create dialogue display animations and transitions</mark>
 
 **Priority 2:**
+
 <mark style="color:red">- Implement game state management (playing, paused, game over)<br>- Create transition system between game states</mark>
+
 <mark style="color:orange">- Optimize collision detection and movement physics<br>- Handle player input during dialogue (disable movement, enable choice selection)</mark>
+
 <mark style="color:green">- Implement "WHS Review" task:<br>&nbsp;&nbsp;* Handrail repair mechanic<br>&nbsp;&nbsp;* Safety termination failure state<br>- Program rock-paper-scissors logic for all three pirate types<br>&nbsp;&nbsp;* Define win/lose conditions for each dialogue choice<br>- Implement cargo loss counter (three strikes system)<br>- Create outcome animations (pirate leaves vs. steals cargo)</mark>
 
 **Priority 3:**
+
 <mark style="color:red">- Create task spawning system with random timing<br>- Balance task frequency and difficulty</mark>
+
 <mark style="color:orange">- Add visual/audio cues for incoming tasks<br>- Create priority/queue system for multiple concurrent tasks</mark>
+
 <mark style="color:green">- Implement pirate spawn mechanics and timing<br>- Integrate pirate boarding with game flow<br>- Test all pirate type and dialogue combinations</mark>
 
 ------------
@@ -93,19 +114,28 @@ The types of pirates and their dialogue responses will be similar to rock-paper-
 ### Week 3: Polish, Testing & Completion
 
 **Priority 1:**
+
 <mark style="color:red">- Create all game over screens:<br>&nbsp;&nbsp;* Asteroid collision<br>&nbsp;&nbsp;* Cargo loss (trailer detaches)<br>&nbsp;&nbsp;* Safety violation<br>&nbsp;&nbsp;* Three cargo theft failures</mark>
+
 <mark style="color:orange">- Implement win condition (successful delivery)<br>- Balance task difficulty and timing based on playtesting<br>- Polish task visual indicators</mark>
+
 <mark style="color:green">- Implement complete HUD:<br>&nbsp;&nbsp;* Cargo counter display (lives remaining)<br>&nbsp;&nbsp;* Active task timers with visual warnings<br>&nbsp;&nbsp;* Current objective indicators<br>- Add background music<br>- Sound effects for pirate boarding and movement</mark>
 
+
 **Priority 2:**
+
 <mark style="color:red">- Add restart functionality (if time permits)<br>- Implement pause system with pause menu (if time permits)<br>- Create settings/options (if time permits)</mark>
+
 <mark style="color:orange">- Comprehensive playtesting of all tasks<br>- Fix task-related bugs<br>- Balance spawn rates and difficulty curve<br>- Final testing of edge cases</mark>
+
 <mark style="color:green">- Contribute to integration testing<br>- Polish all animations and transitions<br>- Final art pass on sprites and backgrounds<br>- UI/UX refinements from playtesting</mark>
 
 **Priority 3:**
 <mark style="color:red">- Bug fixing from playtest feedback<br>- Code cleanup and documentation</mark>
+
 <mark style="color:orange">- Performance optimization<br>- Final integration testing<br>- Create final build</mark>
-<mark style="color:green">- Write README and documentation<br>- Prepare presentation
+
+<mark style="color:green">- Write README and documentation<br>- Prepare presentation or final assessment whatever</Mark>
 
 
 
