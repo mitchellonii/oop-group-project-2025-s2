@@ -356,4 +356,9 @@ The types of pirates and their dialogue responses will be similar to rock-paper-
 
 ## Class diagram
 [![Fig 2.0, Class Diagram](https://github.com/mitchellonii/oop-group-project-2025-s2/blob/mitchell/images/classDiagram.png?raw=true "Fig 2.0 Class Diagram")](https://github.com/mitchellonii/oop-group-project-2025-s2/blob/mitchell/images/classDiagram.png?raw=true "Fig 2.0 Class Diagram")
->Fig 2.0 Class Diagram
+>Fig 2.0 Class Diagram of base classes
+
+[![Fig 2.1, Class Diagram](https://github.com/mitchellonii/oop-group-project-2025-s2/blob/mitchell/images/PHOTO-2025-10-08-10-19-12.jpg?raw=true "Fig 2.1 Class Diagram")](https://github.com/mitchellonii/oop-group-project-2025-s2/blob/mitchell/images/PHOTO-2025-10-08-10-19-12.jpg?raw=true "Fig 2.1 Class Diagram")
+>Fig 2.1 Class Diagram of task classess
+
+
