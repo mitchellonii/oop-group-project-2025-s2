@@ -28,7 +28,7 @@ int main()
     int countdownTextID = engine.mountRenderable(countdown);//add countdown text to the render loop. store ID for removal at a later time
 
     countdown->setDismountCallback([&engine, countdownTextID, text](CountdownText* obj) {//called after the time left reaches 0
-        engine.dismountPhysicsElement(countdownTextID);//remove text from scene
+        engine.dismountRenderable(countdownTextID);//remove text from scene
         text->setText("Woah");
         text->setAnimationStyle(TextAnimation::None);
         text->setColor(sf::Color::Yellow);
