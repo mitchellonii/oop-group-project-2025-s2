@@ -24,6 +24,8 @@
         "cctype": "cpp",
         "algorithm": "cpp",
         "ios": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "__locale": "cpp",
+        "locale": "cpp"
     }
 }

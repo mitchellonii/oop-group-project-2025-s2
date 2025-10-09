@@ -287,7 +287,7 @@ void GameController::run()
         waitingText.setFillColor(sf::Color::Red);
         waitingText.setStyle(sf::Text::Bold);
         waitingText.setPosition({50, 50});
-        waitingText.setString("Waiting for content...");
+        waitingText.setString("Nothing to render");
     }
 
     sf::Clock frameClock;
@@ -334,7 +334,7 @@ void GameController::run()
                 }
                 else
                 {
-                    key = sf::Keyboard::Key::Unknown; // Optional fallback
+                    key = sf::Keyboard::Key::Unknown;
                 }
                 for (int i = 0; i < this->renderablesSize; ++i)
                 {
