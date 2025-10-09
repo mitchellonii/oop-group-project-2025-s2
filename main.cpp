@@ -19,6 +19,7 @@ int main()
     text->setPosition(100, 100);
     text->setFontSize(15);
     text->setAnimationStyle(TextAnimation::Ellipsis);
+    
     engine.mountRenderable(text);
 
     engine.run();
