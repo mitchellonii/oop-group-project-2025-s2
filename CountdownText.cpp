@@ -8,8 +8,8 @@ CountdownText::CountdownText(int x, int y, unsigned int fontSize)
     lastSecond = 5;
 }
 
-void CountdownText::setDismountCallback(std::function<void(CountdownText*)> callback) {
-    dismountCallback = callback;
+void CountdownText::setCountdownEndCallback(std::function<void(CountdownText*)> callback) {
+    countdownEndCallback = callback;
 }
 
 void CountdownText::draw(sf::RenderWindow* globalWindow) {
@@ -27,11 +27,10 @@ void CountdownText::draw(sf::RenderWindow* globalWindow) {
     }
 
     if (elapsed >= 5.0f) {
-        if (dismountCallback) {
-            dismountCallback(this);
-            dismountCallback = nullptr;
+        if (countdownEndCallback) {
+            countdownEndCallback(this);
+            countdownEndCallback = nullptr;
         }
-        return; // Skip drawing after countdown ends
     }
 
     TextElement::draw(globalWindow);

@@ -7,14 +7,14 @@
 class CountdownText : public TextElement {
 private:
     sf::Clock countdownClock;
-    std::function<void(CountdownText*)> dismountCallback;
+    std::function<void(CountdownText*)> countdownEndCallback;
     int lastSecond = 5;
 
 public:
     CountdownText(int x, int y, unsigned int fontSize);
 
     void draw(sf::RenderWindow* globalWindow) override;
-    void setDismountCallback(std::function<void(CountdownText*)> callback);
+    void setCountdownEndCallback(std::function<void(CountdownText*)> callback);
 };
 
 #endif
