@@ -4,7 +4,8 @@
 #include "PhysicsElement.h"
 #include "RenderElement.h"
 #include "TextElement.h"
-
+#include "CountdownText.h"
+#include <iostream>
 int main()
 {
     GameController engine;
@@ -19,12 +20,18 @@ int main()
     text->setPosition(100, 100);
     text->setFontSize(15);
     text->setAnimationStyle(TextAnimation::Ellipsis);
-        //text class listens for keyboard events (TextElement.cpp). try pressing some keys while the prog is running. look in console
+    //text class listens for keyboard events (TextElement.cpp). try pressing some keys while the prog is running. look in console
 
-    int id = engine.mountRenderable(text);
+    engine.mountRenderable(text);
+    
+    CountdownText* countdown = new CountdownText(250, 200, 72);
+    int id = engine.mountRenderable(countdown);
 
-    //to remove the text from the engine, use:
-    //engine.dismountRenderable(id);
+    countdown->setDismountCallback([&engine, id](CountdownText* obj) {
+        engine.dismountPhysicsElement(id);//remove item by id
+        engine.clearAllRenderables(); // remove all items
+    });
+
 
     engine.run();
     //engine.run blocks execution until exited. anything under will not run
