@@ -19,9 +19,12 @@ int main()
     text->setPosition(100, 100);
     text->setFontSize(15);
     text->setAnimationStyle(TextAnimation::Ellipsis);
-        //text class listens for keyboard events. try pressing some keys while the prog is running. look in console
+        //text class listens for keyboard events (TextElement.cpp). try pressing some keys while the prog is running. look in console
 
-    engine.mountRenderable(text);
+    int id = engine.mountRenderable(text);
+
+    //to remove the text from the engine, use:
+    //engine.dismountRenderable(id);
 
     engine.run();
     //engine.run blocks execution until exited. anything under will not run

@@ -59,12 +59,12 @@ void GameController::stop()
     this->runinng = false;
 }
 
-bool GameController::mountRenderable(RenderElement *element)
+int GameController::mountRenderable(RenderElement *element)
 {
     if (element == nullptr)
     {
         std::cout << "[GameController] ERROR: Cannot mount null renderable!\n";
-        return false;
+        return -1;
     }
 
     resizeRenderablesIfNeeded();
@@ -72,21 +72,21 @@ bool GameController::mountRenderable(RenderElement *element)
     if (renderablesSize >= renderablesCapacity)
     {
         std::cout << "[GameController] ERROR: Cannot mount renderable, array is full!\n";
-        return false;
+        return -1;
     }
 
     renderables[renderablesSize] = element;
     renderablesSize++;
     std::cout << "[GameController] Mounted renderable. Total: " << renderablesSize << "\n";
-    return true;
+    return (renderablesSize-1);
 }
 
-bool GameController::mountPhysicsElement(PhysicsElement* element)
+int GameController::mountPhysicsElement(PhysicsElement* element)
 {
     if (element == nullptr)
     {
         std::cout << "[GameController] ERROR: Cannot mount null physics element!\n";
-        return false;
+        return -1;
     }
 
     resizePhysicsItemsIfNeeded();
@@ -94,16 +94,15 @@ bool GameController::mountPhysicsElement(PhysicsElement* element)
     if (physicsItemsSize >= physicsItemsCapacity)
     {
         std::cout << "[GameController] ERROR: Cannot mount physics element, array is full!\n";
-        return false;
+        return -1;
     }
 
     physicsItems[physicsItemsSize++] = element;
     std::cout << "[GameController] Mounted physics element. Total: " << physicsItemsSize << "\n";
-    return true;
+    return (physicsItemsSize-1);
 }
 
 
-// Dismount renderable by index
 bool GameController::dismountRenderable(int index)
 {
     if (index < 0 || index >= renderablesSize)
@@ -112,13 +111,11 @@ bool GameController::dismountRenderable(int index)
         return false;
     }
 
-    // Delete the element
     if (renderables[index] != nullptr)
     {
         delete renderables[index];
     }
 
-    // Shift elements down to fill the gap
     for (int i = index; i < renderablesSize - 1; i++)
     {
         renderables[i] = renderables[i + 1];
@@ -133,7 +130,6 @@ bool GameController::dismountRenderable(int index)
 
 
 
-// Dismount renderable by pointer
 bool GameController::dismountRenderable(const RenderElement *element)
 {
     if (element == nullptr)
@@ -141,7 +137,6 @@ bool GameController::dismountRenderable(const RenderElement *element)
         return false;
     }
 
-    // Find the element in the array
     for (int i = 0; i < renderablesSize; i++)
     {
         if (renderables[i] == element)
@@ -154,7 +149,6 @@ bool GameController::dismountRenderable(const RenderElement *element)
     return false;
 }
 
-// Dismount physics element by pointer
 bool GameController::dismountPhysicsElement(int index)
 {
     if (index < 0 || index >= physicsItemsSize)
@@ -165,7 +159,6 @@ bool GameController::dismountPhysicsElement(int index)
 
     delete physicsItems[index];
 
-    // Shift elements down
     for (int i = index; i < physicsItemsSize - 1; i++)
     {
         physicsItems[i] = physicsItems[i + 1];
@@ -180,10 +173,8 @@ bool GameController::dismountPhysicsElement(int index)
 }
 
 
-// Clear all renderables
 void GameController::clearAllRenderables()
 {
-    // Delete all elements
     for (int i = 0; i < renderablesSize; i++)
     {
         if (renderables[i] != nullptr)
@@ -196,14 +187,12 @@ void GameController::clearAllRenderables()
     std::cout << "[GameController] Cleared all renderables.\n";
 }
 
-// Clear all physics elements
 void GameController::clearAllPhysicsElements()
 {
     physicsItemsSize = 0;
     std::cout << "[GameController] Cleared all physics elements.\n";
 }
 
-// Clear everything
 void GameController::clearAll()
 {
     clearAllRenderables();
@@ -211,7 +200,6 @@ void GameController::clearAll()
     std::cout << "[GameController] Cleared all elements.\n";
 }
 
-// Get renderable at index
 RenderElement *GameController::getRenderableAt(int index)
 {
     if (index < 0 || index >= renderablesSize)
@@ -221,7 +209,6 @@ RenderElement *GameController::getRenderableAt(int index)
     return renderables[index];
 }
 
-// Get physics element at index
 PhysicsElement* GameController::getPhysicsElementAt(int index)
 {
     if (index < 0 || index >= physicsItemsSize)
@@ -231,7 +218,6 @@ PhysicsElement* GameController::getPhysicsElementAt(int index)
     return physicsItems[index];
 }
 
-// Resize renderables array if needed (double capacity)
 void GameController::resizeRenderablesIfNeeded()
 {
     if (renderablesSize >= renderablesCapacity)
@@ -239,19 +225,17 @@ void GameController::resizeRenderablesIfNeeded()
         int newCapacity = renderablesCapacity * 2;
         RenderElement **newArray = new RenderElement *[newCapacity];
 
-        // Initialize new pointers to nullptr
         for (int i = 0; i < newCapacity; i++)
         {
             newArray[i] = nullptr;
         }
 
-        // Copy existing pointers
         for (int i = 0; i < renderablesSize; i++)
         {
             newArray[i] = renderables[i];
         }
 
-        delete[] renderables; // Only delete the array, not the elements
+        delete[] renderables;
         renderables = newArray;
         renderablesCapacity = newCapacity;
 
@@ -260,7 +244,6 @@ void GameController::resizeRenderablesIfNeeded()
     }
 }
 
-// Resize physics items array if needed (double capacity)
 void GameController::resizePhysicsItemsIfNeeded()
 {
     if (physicsItemsSize >= physicsItemsCapacity)
@@ -409,7 +392,6 @@ GameController::~GameController()
 {
     std::cout << "[GameController] Destructor called. Cleaning up.\n";
 
-    // Delete all renderable elements first
     for (int i = 0; i < renderablesSize; i++)
     {
         if (renderables[i] != nullptr)
@@ -417,7 +399,6 @@ GameController::~GameController()
             delete renderables[i];
         }
     }
-    // Then delete the array of pointers
     delete[] renderables;
 
     delete[] physicsItems;

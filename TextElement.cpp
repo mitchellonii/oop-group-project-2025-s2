@@ -8,11 +8,9 @@ TextElement::TextElement() : RenderElement(), sfText(*new sf::Font()) {
     fontSize = 24;
     textStyle = sf::Text::Regular;
     
-    // Allocate and load font
     font = new sf::Font();
     fontLoaded = loadSystemFont();
     
-    // Update sfText to use the loaded font
     if (fontLoaded) {
         sfText.setFont(*font);
     }
@@ -35,16 +33,13 @@ TextElement::TextElement(const std::string& text, int x, int y, unsigned int fon
     this->textColor = sf::Color::White;
     this->textStyle = sf::Text::Regular;
     
-    // Allocate and load font
     this->font = new sf::Font();
     this->fontLoaded = loadSystemFont();
     
-    // Update sfText to use the loaded font
     if (fontLoaded) {
         sfText.setFont(*font);
     }
     
-    // Configure the SFML text object
     sfText.setString(text);
     sfText.setCharacterSize(fontSize);
     sfText.setFillColor(textColor);
@@ -64,16 +59,13 @@ TextElement::TextElement(const std::string& text, int x, int y, unsigned int fon
     this->textColor = color;
     this->textStyle = sf::Text::Regular;
     
-    // Allocate and load font
     this->font = new sf::Font();
     this->fontLoaded = loadSystemFont();
     
-    // Update sfText to use the loaded font
     if (fontLoaded) {
         sfText.setFont(*font);
     }
     
-    // Configure the SFML text object
     sfText.setString(text);
     sfText.setCharacterSize(fontSize);
     sfText.setFillColor(textColor);
@@ -96,7 +88,6 @@ TextElement::~TextElement() {
 void TextElement::onMount() {
     std::cout << "[TextElement] onMount() called.\n";
     
-    // If font wasn't loaded in constructor, try again
     if (!fontLoaded) {
         loadSystemFont();
     }
@@ -171,7 +162,6 @@ void TextElement::setUnderlined(bool underlined) {
 
 bool TextElement::loadFont(const std::string& fontPath) {
     std::cout << "[TextElement] loadFont() called but embedded font is used exclusively.\n";
-    // This method is kept for API compatibility but doesn't load from file
     return false;
 }
 
@@ -183,7 +173,6 @@ bool TextElement::loadSystemFont() {
         return false;
     }
     
-    // Load embedded font from memory
     if (font->openFromMemory(fontData, fontData_len)) {
         fontLoaded = true;
         sfText.setFont(*font);
@@ -209,7 +198,6 @@ void TextElement::setAnimationStyle(TextAnimation type) {
     animationClock.restart();
     animationFrame = 0;
     
-    // Store the base text once
     baseText = text;
 }
 

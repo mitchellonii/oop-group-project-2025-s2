@@ -30,8 +30,8 @@ public:
     void run();
     void stop();
 
-    bool mountRenderable(RenderElement* element);  
-bool mountPhysicsElement(PhysicsElement* element);
+    int mountRenderable(RenderElement* element);  
+int mountPhysicsElement(PhysicsElement* element);
     
     bool dismountRenderable(int index);
     bool dismountPhysicsElement(int index);
