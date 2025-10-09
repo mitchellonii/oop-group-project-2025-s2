@@ -11,7 +11,7 @@ private:
     int renderablesSize;
     int renderablesCapacity;
     
-    PhysicsElement* physicsItems;
+    PhysicsElement** physicsItems;
     int physicsItemsSize;
     int physicsItemsCapacity;
     
@@ -31,7 +31,7 @@ public:
     void stop();
 
     bool mountRenderable(RenderElement* element);  
-    bool mountPhysicsElement(const PhysicsElement& element);
+bool mountPhysicsElement(PhysicsElement* element);
     
     bool dismountRenderable(int index);
     bool dismountPhysicsElement(int index);

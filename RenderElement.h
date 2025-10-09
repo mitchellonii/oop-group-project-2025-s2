@@ -15,6 +15,8 @@ class RenderElement{
         RenderElement();
         RenderElement(std::string imageFilePath, int x, int y);
         virtual void onMount();
+        virtual void onKeyPress(sf::Keyboard::Key key) = 0;
+
         virtual void draw(sf::RenderWindow* globalWindow) =0;
         virtual ~RenderElement();
 };

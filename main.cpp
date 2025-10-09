@@ -19,6 +19,8 @@ int main()
     text->setPosition(100, 100);
     text->setFontSize(15);
     text->setAnimationStyle(TextAnimation::Ellipsis);
+    //text class listens for keyboard events. try pressing some keys while the prog is running. look in console
+
     engine.mountRenderable(text);
 
     engine.run();

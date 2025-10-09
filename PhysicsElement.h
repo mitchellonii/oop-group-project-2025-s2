@@ -16,6 +16,7 @@ class PhysicsElement : public RenderElement {
         PhysicsElement(std::string imageFilePath, int x, int y, int hitboxR);
         void onMount() override;
         void draw(sf::RenderWindow* globalWindow) override;
+
         void physicsTick();
         ~PhysicsElement() override;
 };
