@@ -22,13 +22,20 @@ int main()
     text->setAnimationStyle(TextAnimation::Ellipsis);
 
     sf::Keyboard::Key keyA = sf::Keyboard::Key::A;
-    const sf::Keyboard::Key* keys[] = { &keyA};
+    sf::Keyboard::Key keyD = sf::Keyboard::Key::D;
 
-    text->setKeyboardEventListners(keys, 1);
+    const sf::Keyboard::Key* keys[] = {&keyA, &keyD};
+
+    text->setKeyboardEventListners(keys, 2);
 
     text->setKeyPressCallback([&text](sf::Keyboard::Key key) {
     if (key == sf::Keyboard::Key::A) {
         text->setText("You pressed A!");
+        text->setFontSize(30);
+        text->setColor(sf::Color::Yellow);
+        text->setAnimationStyle(TextAnimation::None);
+    }else if (key == sf::Keyboard::Key::D) {
+        text->setText("You pressed D!");
         text->setFontSize(30);
         text->setColor(sf::Color::Yellow);
         text->setAnimationStyle(TextAnimation::None);
@@ -49,7 +56,7 @@ int main()
         text2->setText("Clicked!");
         text2->setClickable(false);
     });
-    
+
     engine.mountRenderable(text2);
     engine.mountRenderable(text);
     
