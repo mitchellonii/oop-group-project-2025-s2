@@ -201,32 +201,3 @@ void TextElement::setAnimationStyle(TextAnimation type) {
     baseText = text;
 }
 
-void TextElement::onKeyPress(sf::Keyboard::Key key) {
-    std::string keyName;
-
-    switch (key) {
-        case sf::Keyboard::Key::A:
-            keyName = "A"; 
-            break;
-        case sf::Keyboard::Key::D:
-            keyName = "D"; 
-            break;
-        case sf::Keyboard::Key::Left:
-            keyName = "Left";
-            break;
-        case sf::Keyboard::Key::Right:
-            keyName = "Right";
-            break;
-        case sf::Keyboard::Key::Space:
-            keyName = "Space";
-            break;
-        case sf::Keyboard::Key::E:
-            keyName = "E";
-            break;
-        default:
-            keyName = "Other";
-            break;
-    }
-
-    std::cout << "[TextElement] key press: " << keyName << std::endl;
-}

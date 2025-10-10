@@ -52,7 +52,6 @@ public:
     sf::FloatRect getBounds() const;
     bool isFontLoaded() const { return fontLoaded; }
     void setAnimationStyle(TextAnimation type);
-    void onKeyPress(sf::Keyboard::Key key) override;
 };
 
 #endif

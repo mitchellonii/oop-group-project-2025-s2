@@ -20,7 +20,21 @@ int main()
     text->setPosition(100, 100);
     text->setFontSize(15);
     text->setAnimationStyle(TextAnimation::Ellipsis);
-    //text class listens for keyboard events (TextElement.cpp). output in console
+
+    sf::Keyboard::Key keyA = sf::Keyboard::Key::A;
+    const sf::Keyboard::Key* keys[] = { &keyA};
+
+    text->setKeyboardEventListners(keys, 1);
+
+    text->setKeyPressCallback([&text](sf::Keyboard::Key key) {
+    if (key == sf::Keyboard::Key::A) {
+        text->setText("You pressed A!");
+        text->setFontSize(30);
+        text->setColor(sf::Color::Yellow);
+        text->setAnimationStyle(TextAnimation::None);
+
+    }
+});
 
     engine.mountRenderable(text);//add text to the render loop
     
