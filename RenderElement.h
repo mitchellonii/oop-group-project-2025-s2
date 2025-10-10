@@ -1,3 +1,4 @@
+
 #ifndef RENDERELEMENT_H
 #define RENDERELEMENT_H
 
@@ -11,7 +12,9 @@ protected:
     std::string spriteFilepath;
     int x;
     int y;
-
+    int clickable;
+    int lx;
+    int ly;
     int storedKeyCount = 0;
     sf::Keyboard::Key* keybordEvents = nullptr;
 
@@ -22,12 +25,17 @@ public:
 
     virtual void onMount();
 
-    void onKeyPress(sf::Keyboard::Key key);
-
+    bool getClickable();
+    void setClickable(bool clickable);
+    void setClickboxSize(int lx, int ly);
     void setKeyPressCallback(std::function<void(sf::Keyboard::Key)> callback);
-
+    void onKeyPress(sf::Keyboard::Key key);
+    sf::Vector2i getPosition() const;
+    sf::Vector2i getClickbox() const;
+    void setOnClickCallback(std::function<void()> callback);
     void setKeyboardEventListners(const sf::Keyboard::Key* keys[], std::size_t length);
     std::function<void(sf::Keyboard::Key)> keyPressCallback;
+    std::function<void()> clickCallback;
 
     sf::Keyboard::Key* getKeyboardEventListners();
     std::size_t getKeyboardEventListnersCount() const;

@@ -186,6 +186,8 @@ bool TextElement::loadSystemFont() {
 }
 
 void TextElement::setPosition(int newX, int newY) {
+    x = newX;
+    y = newY;
     sfText.setPosition({static_cast<float>(newX), static_cast<float>(newY)});
 }
 

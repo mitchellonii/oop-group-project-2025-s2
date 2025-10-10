@@ -36,7 +36,22 @@ int main()
     }
 });
 
-    engine.mountRenderable(text);//add text to the render loop
+ TextElement* text2 = new TextElement();
+    
+    text2->setText("Click me");
+    text2->setColor(sf::Color::Blue);
+    text2->setBold(true);
+    text2->setPosition(200, 200);
+    text2->setFontSize(15);
+    text2->setClickable(true);
+    text2->setClickboxSize(100, 20);
+    text2->setOnClickCallback([&text2](){
+        text2->setText("Clicked!");
+        text2->setClickable(false);
+    });
+    
+    engine.mountRenderable(text2);
+    engine.mountRenderable(text);
     
     CountdownText* countdown = new CountdownText(250, 200, 72);
     int ID = engine.mountRenderable(countdown);//add countdown text to the render loop. store ID for removal at a later time

@@ -4,11 +4,11 @@
 #include <iostream>
 
 RenderElement::RenderElement()
-    : spriteFilepath(""), x(0), y(0), keybordEvents(nullptr), storedKeyCount(0) {
+    : spriteFilepath(""), x(0), y(0), keybordEvents(nullptr), storedKeyCount(0), lx(0),ly(0),clickable(false) {
 }
 
 RenderElement::RenderElement(std::string filePath, int posX, int posY)
-    : spriteFilepath(filePath), x(posX), y(posY), keybordEvents(nullptr), storedKeyCount(0) {
+    : spriteFilepath(filePath), x(posX), y(posY), keybordEvents(nullptr), storedKeyCount(0), lx(0),ly(0),clickable(false) {
 }
 
 void RenderElement::onMount() {
@@ -48,4 +48,39 @@ void RenderElement::onKeyPress(sf::Keyboard::Key key) {
     if (keyPressCallback) {
         keyPressCallback(key);
     }
+}
+
+
+
+    void getClickable();
+    void setClickable(bool clickable);
+    void setClickboxSize(int lx, int ly);
+
+
+bool RenderElement::getClickable(){
+    return clickable;
+}
+
+void RenderElement::setClickable(bool c){
+    clickable = c;
+    return;
+}
+
+void RenderElement::setClickboxSize(int lxx, int lyy){
+    lx = lxx;
+    ly = lyy;
+    return;
+}
+
+void RenderElement::setOnClickCallback(std::function<void()> callback){
+    clickCallback = callback;
+}
+
+
+sf::Vector2i RenderElement::getPosition() const {
+    return sf::Vector2i(x, y);
+}
+
+sf::Vector2i RenderElement::getClickbox() const {
+    return sf::Vector2i(lx, ly);
 }

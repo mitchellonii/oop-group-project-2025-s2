@@ -29,7 +29,7 @@ GameController::GameController()
 void GameController::init()
 {
     std::cout << "[GameController] Init called.\n";
-    this->globalWindow = new sf::RenderWindow(sf::VideoMode({600u, 500u}), "Spacefairer v0.1");
+    this->globalWindow = new sf::RenderWindow(sf::VideoMode({900u, 500u}), "Spacefairer v0.1");
 }
 
 void GameController::physicsTick()
@@ -328,7 +328,7 @@ sf::Keyboard::Key key;
                 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
                 {
                     key = sf::Keyboard::Key::Space;
-                }
+                } 
                 else
                 {
                     key = sf::Keyboard::Key::Unknown;
@@ -356,6 +356,36 @@ sf::Keyboard::Key key;
                 }
             }
         }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+sf::Vector2i mousePos = sf::Mouse::getPosition(*this->globalWindow);
+
+
+for (int i = 0; i < this->renderablesSize; ++i) {
+    auto element = this->renderables[i];
+    if (!element || !element->getClickable()) continue;
+
+    // Top-left corner of the element
+    sf::Vector2i pos = element->getPosition();
+
+    // Width and height of its clickable area
+    sf::Vector2i box = element->getClickbox();
+
+    int left   = pos.x;
+    int right  = pos.x + box.x;  // x + width
+    int top    = pos.y;
+    int bottom = pos.y + box.y;  // y + height
+    std::cout << left << right<< top<< bottom << std::endl;
+    // Check if the mouse cursor lies within the clickable rectangle
+    bool insideX = (mousePos.x >= left && mousePos.x <= right);
+    bool insideY = (mousePos.y >= top  && mousePos.y <= bottom);
+
+    if (insideX && insideY && element->clickCallback) {
+        element->clickCallback();
+    }
+}
+}
+
+        
 
         // Rendering and frame timing - outside event loop, only once per frame
         this->globalWindow->clear(sf::Color::Black);
