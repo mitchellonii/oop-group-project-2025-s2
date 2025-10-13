@@ -1,82 +1,54 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include <vector>
 
+#include "Character.h"
+#include "CountdownText.h"
 #include "GameController.h"
 #include "PhysicsElement.h"
 #include "RenderElement.h"
+#include "Sound.h"
 #include "TextElement.h"
-#include "CountdownText.h"
-#include <iostream>
-int main()
-{
-    GameController engine;
+int main() {
+  GameController engine;
 
-    engine.init();
+  engine.init();
+  RenderElement* wallpaper = new RenderElement("assets/bg.jpg", 0, 0);
+  engine.mountRenderable(wallpaper);
 
-    TextElement* text = new TextElement();
-    
-    text->setText("If you see this, rendering is working");
-    text->setColor(sf::Color::Green);
-    text->setBold(true);
-    text->setPosition(100, 100);
-    text->setFontSize(15);
-    text->setAnimationStyle(TextAnimation::Ellipsis);
+  RenderElement* button = new RenderElement("assets/button.jpg", 350, 400);
+  engine.mountRenderable(button);
 
-    sf::Keyboard::Key keyA = sf::Keyboard::Key::A;
-    sf::Keyboard::Key keyD = sf::Keyboard::Key::D;
+  TextElement* title = new TextElement("Spacefairer", 370, 100, 40);
+  engine.mountRenderable(title);
 
-    const sf::Keyboard::Key* keys[] = {&keyA, &keyD};
+  MusicTrack* audio = new MusicTrack();
+  audio->openFromFile("assets/music.ogg");
+  audio->play();
+  audio->setLoop(true);
 
-    text->setKeyboardEventListners(keys, 2);
+  title->setBold(true);
+  title->setAnimationStyle(TextAnimation::Ellipsis);
 
-    text->setKeyPressCallback([&text](sf::Keyboard::Key key) {
-    if (key == sf::Keyboard::Key::A) {
-        text->setText("You pressed A!");
-        text->setFontSize(30);
-        text->setColor(sf::Color::Yellow);
-        text->setAnimationStyle(TextAnimation::None);
-    }else if (key == sf::Keyboard::Key::D) {
-        text->setText("You pressed D!");
-        text->setFontSize(30);
-        text->setColor(sf::Color::Yellow);
-        text->setAnimationStyle(TextAnimation::None);
+  button->setClickable(true);
+  button->setClickboxSize(200, 20);
 
-    }
-});
+  std::vector<std::string> leftFrames = {"assets/smileyface.jpg"};
+  std::vector<std::string> rightFrames = {"assets/smileyface.jpg"};
+  Character* player = new Character("assets/smileyface.jpg", 100, 300, 50,
+                                    leftFrames, rightFrames, 0.1f);
 
- TextElement* text2 = new TextElement();
-    
-    text2->setText("Click me");
-    text2->setColor(sf::Color::Blue);
-    text2->setBold(true);
-    text2->setPosition(200, 200);
-    text2->setFontSize(15);
-    text2->setClickable(true);
-    text2->setClickboxSize(100, 20);
-    text2->setOnClickCallback([&text2](){
-        text2->setText("Clicked!");
-        text2->setClickable(false);
-    });
+  button->setOnClickCallback(
+      [&button, &engine, &audio, &wallpaper, &title, &player]() {
+        engine.dismountRenderable(title);
+        engine.dismountRenderable(wallpaper);
+        audio->stop();
+        engine.mountPhysicsElement(player);
 
-    engine.mountRenderable(text2);
-    engine.mountRenderable(text);
-    
-    CountdownText* countdown = new CountdownText(250, 200, 72);
-    int ID = engine.mountRenderable(countdown);//add countdown text to the render loop. store ID for removal at a later time
+        // must be at end of callback. cannot remove self mid-callback
+        engine.dismountRenderable(button);
+      });
 
-    countdown->setCountdownEndCallback([&engine, text, ID](CountdownText* obj) {//called after the time left reaches 0
-        text->setText("Woah");
-        text->setAnimationStyle(TextAnimation::None);
-        text->setColor(sf::Color::Yellow);
-
-        //uncomment to remove countdown text after finished
-        //engine.dismountRenderable(ID);
-    });
-
-
-    engine.run();// engine.run blocks execution until program exited
-
-    //nothing here will run until engine.run() has finshed (ie. program window is closed)
-    //nothing should go here
-
-    return 0;
+  engine.run();
+  return 0;
 }

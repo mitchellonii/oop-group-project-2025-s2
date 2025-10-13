@@ -3,168 +3,112 @@
 #include <cstring>
 #include <iostream>
 
+#include "Character.h"
 #include "font_data.h"
 
-GameController::GameController() {
+GameController::GameController() : runinng(false), globalWindow(nullptr) {
   std::cout << "[GameController] Constructor called.\n";
-
-  renderablesCapacity = 50;
-  renderables = new RenderElement *[renderablesCapacity];
-  for (int i = 0; i < renderablesCapacity; i++) {
-    renderables[i] = nullptr;
-  }
-  renderablesSize = 0;
-
-  physicsItemsCapacity = 20;
-  physicsItems = new PhysicsElement *[physicsItemsCapacity];
-  for (int i = 0; i < physicsItemsCapacity; ++i) {
-    physicsItems[i] = nullptr;
-  }
-  physicsItemsSize = 0;
-
-  runinng = false;
+  renderables.reserve(50);
+  physicsItems.reserve(20);
 }
 
 void GameController::init() {
   std::cout << "[GameController] Init called.\n";
-  this->globalWindow =
+  globalWindow =
       new sf::RenderWindow(sf::VideoMode({900u, 500u}), "Spacefairer v0.1");
 }
 
 void GameController::physicsTick() {
-  for (int i = 0; i < this->physicsItemsSize; i++) {
-    this->physicsItems[i]->physicsTick();
+  for (auto* element : physicsItems) {
+    element->physicsTick();
   }
 }
 
 void GameController::drawAll() {
-  for (int i = 0; i < this->physicsItemsSize; i++) {
-    this->physicsItems[i]->draw(this->globalWindow);
-  }
-  for (int i = 0; i < this->renderablesSize; i++) {
-    if (this->renderables[i] != nullptr) {
-      this->renderables[i]->draw(this->globalWindow);
-    }
-  }
+  for (auto* element : physicsItems) element->draw(globalWindow);
+  for (auto* element : renderables)
+    if (element) element->draw(globalWindow);
 }
 
 void GameController::stop() {
   std::cout << "[GameController] stop() called. Stopping game loop.\n";
-  this->runinng = false;
+  runinng = false;
 }
 
-int GameController::mountRenderable(RenderElement *element) {
+int GameController::mountRenderable(RenderElement* element) {
   if (element == nullptr) {
     std::cout << "[GameController] ERROR: Cannot mount null renderable!\n";
     return -1;
   }
-
-  resizeRenderablesIfNeeded();
-
-  if (renderablesSize >= renderablesCapacity) {
-    std::cout
-        << "[GameController] ERROR: Cannot mount renderable, array is full!\n";
-    return -1;
-  }
-
-  renderables[renderablesSize] = element;
-  renderablesSize++;
-  std::cout << "[GameController] Mounted renderable. Total: " << renderablesSize
-            << "\n";
-  return (renderablesSize - 1);
+  renderables.push_back(element);
+  std::cout << "[GameController] Mounted renderable. Total: "
+            << renderables.size() << "\n";
+  return static_cast<int>(renderables.size() - 1);
 }
 
-int GameController::mountPhysicsElement(PhysicsElement *element) {
+int GameController::mountPhysicsElement(PhysicsElement* element) {
   if (element == nullptr) {
     std::cout << "[GameController] ERROR: Cannot mount null physics element!\n";
     return -1;
   }
-
-  resizePhysicsItemsIfNeeded();
-
-  if (physicsItemsSize >= physicsItemsCapacity) {
-    std::cout << "[GameController] ERROR: Cannot mount physics element, array "
-                 "is full!\n";
-    return -1;
-  }
-
-  physicsItems[physicsItemsSize++] = element;
+  physicsItems.push_back(element);
   std::cout << "[GameController] Mounted physics element. Total: "
-            << physicsItemsSize << "\n";
-  return (physicsItemsSize - 1);
+            << physicsItems.size() << "\n";
+  return static_cast<int>(physicsItems.size() - 1);
 }
 
 bool GameController::dismountRenderable(int index) {
-  if (index < 0 || index >= renderablesSize) {
+  if (index < 0 || index >= static_cast<int>(renderables.size())) {
     std::cout << "[GameController] ERROR: Invalid renderable index: " << index
               << "\n";
     return false;
   }
-
-  if (renderables[index] != nullptr) {
-    delete renderables[index];
-  }
-
-  for (int i = index; i < renderablesSize - 1; i++) {
-    renderables[i] = renderables[i + 1];
-  }
-
-  renderables[renderablesSize - 1] = nullptr;
-  renderablesSize--;
+  delete renderables[index];
+  renderables.erase(renderables.begin() + index);
   std::cout << "[GameController] Dismounted renderable at index " << index
-            << ". Remaining: " << renderablesSize << "\n";
+            << ". Remaining: " << renderables.size() << "\n";
   return true;
 }
 
-bool GameController::dismountRenderable(const RenderElement *element) {
+bool GameController::dismountRenderable(const RenderElement* element) {
   if (element == nullptr) {
     return false;
   }
-
-  for (int i = 0; i < renderablesSize; i++) {
+  for (size_t i = 0; i < renderables.size(); ++i) {
     if (renderables[i] == element) {
-      return dismountRenderable(i);
+      return dismountRenderable(static_cast<int>(i));
     }
   }
-
-  std::cout << "[GameController] WARNING: Renderable not found in array.\n";
+  std::cout << "[GameController] WARNING: Renderable not found.\n";
   return false;
 }
 
 bool GameController::dismountPhysicsElement(int index) {
-  if (index < 0 || index >= physicsItemsSize) {
+  if (index < 0 || index >= static_cast<int>(physicsItems.size())) {
     std::cout << "[GameController] ERROR: Invalid physics element index: "
               << index << "\n";
     return false;
   }
-
   delete physicsItems[index];
-
-  for (int i = index; i < physicsItemsSize - 1; i++) {
-    physicsItems[i] = physicsItems[i + 1];
-  }
-
-  physicsItems[physicsItemsSize - 1] = nullptr;
-  physicsItemsSize--;
-
+  physicsItems.erase(physicsItems.begin() + index);
   std::cout << "[GameController] Dismounted physics element at index " << index
-            << ". Remaining: " << physicsItemsSize << "\n";
+            << ". Remaining: " << physicsItems.size() << "\n";
   return true;
 }
 
 void GameController::clearAllRenderables() {
-  for (int i = 0; i < renderablesSize; i++) {
-    if (renderables[i] != nullptr) {
-      delete renderables[i];
-      renderables[i] = nullptr;
-    }
+  for (auto* elem : renderables) {
+    if (elem != nullptr) delete elem;
   }
-  renderablesSize = 0;
+  renderables.clear();
   std::cout << "[GameController] Cleared all renderables.\n";
 }
 
 void GameController::clearAllPhysicsElements() {
-  physicsItemsSize = 0;
+  for (auto* elem : physicsItems) {
+    if (elem != nullptr) delete elem;
+  }
+  physicsItems.clear();
   std::cout << "[GameController] Cleared all physics elements.\n";
 }
 
@@ -174,62 +118,21 @@ void GameController::clearAll() {
   std::cout << "[GameController] Cleared all elements.\n";
 }
 
-RenderElement *GameController::getRenderableAt(int index) {
-  if (index < 0 || index >= renderablesSize) {
+RenderElement* GameController::getRenderableAt(int index) {
+  if (index < 0 || index >= static_cast<int>(renderables.size()))
     return nullptr;
-  }
   return renderables[index];
 }
 
-PhysicsElement *GameController::getPhysicsElementAt(int index) {
-  if (index < 0 || index >= physicsItemsSize) {
+PhysicsElement* GameController::getPhysicsElementAt(int index) {
+  if (index < 0 || index >= static_cast<int>(physicsItems.size()))
     return nullptr;
-  }
   return physicsItems[index];
 }
 
-void GameController::resizeRenderablesIfNeeded() {
-  if (renderablesSize >= renderablesCapacity) {
-    int newCapacity = renderablesCapacity * 2;
-    RenderElement **newArray = new RenderElement *[newCapacity];
-
-    for (int i = 0; i < newCapacity; i++) {
-      newArray[i] = nullptr;
-    }
-
-    for (int i = 0; i < renderablesSize; i++) {
-      newArray[i] = renderables[i];
-    }
-
-    delete[] renderables;
-    renderables = newArray;
-    renderablesCapacity = newCapacity;
-
-    std::cout << "[GameController] Resized renderables array to capacity: "
-              << newCapacity << "\n";
-  }
-}
-
-void GameController::resizePhysicsItemsIfNeeded() {
-  if (physicsItemsSize >= physicsItemsCapacity) {
-    int newCapacity = physicsItemsCapacity * 2;
-    PhysicsElement **newArray = new PhysicsElement *[newCapacity];
-
-    for (int i = 0; i < newCapacity; i++) {
-      newArray[i] = (i < physicsItemsSize) ? physicsItems[i] : nullptr;
-    }
-
-    delete[] physicsItems;
-    physicsItems = newArray;
-    physicsItemsCapacity = newCapacity;
-
-    std::cout << "[GameController] Resized physics items array to capacity: "
-              << newCapacity << "\n";
-  }
-}
 void GameController::run() {
   std::cout << "[GameController] run() started.\n";
-  this->runinng = true;  // kept your variable name as-is
+  runinng = true;
 
   sf::Font font;
   bool fontLoaded = false;
@@ -254,14 +157,12 @@ void GameController::run() {
   sf::Time physicsStep = sf::seconds(1.f / 20.f);
   sf::Time frameLimit = sf::seconds(1.f / 60.f);
 
-  while (this->runinng && this->globalWindow->isOpen()) {
-    // Poll events
-    while (const std::optional event = this->globalWindow->pollEvent()) {
+  while (runinng && globalWindow->isOpen()) {
+    while (const std::optional event = globalWindow->pollEvent()) {
       if (event->is<sf::Event::Closed>()) {
-        this->globalWindow->close();
+        globalWindow->close();
       } else if (event->is<sf::Event::KeyPressed>()) {
         sf::Keyboard::Key key;
-
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
           key = sf::Keyboard::Key::Left;
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
@@ -277,75 +178,88 @@ void GameController::run() {
         } else {
           key = sf::Keyboard::Key::Unknown;
         }
-        for (int i = 0; i < this->renderablesSize; ++i) {
-          if (this->renderables[i]) {
-            sf::Keyboard::Key *listenedKeys =
-                this->renderables[i]->getKeyboardEventListners();
-            std::size_t keyCount =
-                this->renderables[i]->getKeyboardEventListnersCount();
+        for (size_t i = 0; i < renderables.size(); ++i) {
+          auto element = renderables[i];
+          if (!element) continue;
 
-            for (std::size_t j = 0; j < keyCount; ++j) {
-              if (listenedKeys[j] == key) {
-                this->renderables[i]->onKeyPress(key);
+          sf::Keyboard::Key* listenedKeys = element->getKeyboardEventListners();
+          std::size_t keyCount = element->getKeyboardEventListnersCount();
 
-                if (this->renderables[i]->keyPressCallback)
-                  this->renderables[i]->keyPressCallback(key);
-
-                break;
-              }
+          for (std::size_t j = 0; j < keyCount; ++j) {
+            if (listenedKeys[j] == key) {
+              element->onKeyPress(key);
+              if (element->keyPressCallback) element->keyPressCallback(key);
+              break;
             }
+          }
+        }
+
+        for (size_t i = 0; i < physicsItems.size(); ++i) {
+          auto element = physicsItems[i];
+          if (!element) continue;
+
+          sf::Keyboard::Key* listenedKeys = element->getKeyboardEventListners();
+          std::size_t keyCount = element->getKeyboardEventListnersCount();
+
+          for (std::size_t j = 0; j < keyCount; ++j) {
+            if (listenedKeys[j] == key) {
+              element->onKeyPress(key);
+              if (element->keyPressCallback) element->keyPressCallback(key);
+              break;
+            }
+          }
+          if (auto* character = dynamic_cast<Character*>(element)) {
+            character->handleInput();
           }
         }
       }
     }
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-      sf::Vector2i mousePos = sf::Mouse::getPosition(*this->globalWindow);
 
-      for (int i = 0; i < this->renderablesSize; ++i) {
-        auto element = this->renderables[i];
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+      sf::Vector2i mousePos = sf::Mouse::getPosition(*globalWindow);
+
+      for (auto* element : renderables) {
         if (!element || !element->getClickable()) continue;
 
         sf::Vector2i pos = element->getPosition();
-
         sf::Vector2i box = element->getClickbox();
 
         int left = pos.x;
-        int right = pos.x + box.x;  // x + width
+        int right = pos.x + box.x;
         int top = pos.y;
-        int bottom = pos.y + box.y;  // y + height
-        bool insideX = (mousePos.x >= left && mousePos.x <= right);
-        bool insideY = (mousePos.y >= top && mousePos.y <= bottom);
+        int bottom = pos.y + box.y;
 
-        if (insideX && insideY && element->clickCallback) {
+        if (mousePos.x >= left && mousePos.x <= right && mousePos.y >= top &&
+            mousePos.y <= bottom && element->clickCallback) {
           element->clickCallback();
         }
       }
     }
 
-    this->globalWindow->clear(sf::Color::Black);
+    globalWindow->clear(sf::Color::Black);
 
     sf::Time frameTime = frameClock.restart();
     accumulator += frameTime;
 
     while (accumulator >= physicsStep) {
-      this->physicsTick();
+      physicsTick();
       accumulator -= physicsStep;
     }
 
-    if (this->physicsItemsSize == 0 && this->renderablesSize == 0) {
+    if (physicsItems.empty() && renderables.empty()) {
       if (fontLoaded) {
-        this->globalWindow->draw(waitingText);
+        globalWindow->draw(waitingText);
       } else {
         sf::CircleShape errorIndicator(50);
         errorIndicator.setFillColor(sf::Color::Red);
         errorIndicator.setPosition({275, 225});
-        this->globalWindow->draw(errorIndicator);
+        globalWindow->draw(errorIndicator);
       }
     } else {
-      this->drawAll();
+      drawAll();
     }
 
-    this->globalWindow->display();
+    globalWindow->display();
 
     sf::Time elapsed = frameClock.getElapsedTime();
     if (elapsed < frameLimit) {
@@ -358,15 +272,7 @@ void GameController::run() {
 
 GameController::~GameController() {
   std::cout << "[GameController] Destructor called. Cleaning up.\n";
-
-  for (int i = 0; i < renderablesSize; i++) {
-    if (renderables[i] != nullptr) {
-      delete renderables[i];
-    }
-  }
-  delete[] renderables;
-
-  delete[] physicsItems;
+  clearAll();
 
   if (globalWindow != nullptr) {
     delete globalWindow;

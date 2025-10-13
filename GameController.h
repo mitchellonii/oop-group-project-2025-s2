@@ -2,58 +2,43 @@
 #define GAMECONTROLLER_H
 
 #include <SFML/Graphics.hpp>
+#include <memory>
+#include <vector>
+
 #include "PhysicsElement.h"
 #include "RenderElement.h"
 
 class GameController {
-private:
-    RenderElement** renderables;  
-    int renderablesSize;
-    int renderablesCapacity;
-    
-    PhysicsElement** physicsItems;
-    int physicsItemsSize;
-    int physicsItemsCapacity;
-    
-    bool runinng;
-    sf::RenderWindow* globalWindow;
+ private:
+  std::vector<RenderElement*> renderables;
+  std::vector<PhysicsElement*> physicsItems;
 
-public:
-    static constexpr double FPS = 1000 / 60;
+  sf::RenderWindow* globalWindow;
+  bool runinng;
 
-    GameController();
-    ~GameController();
+ public:
+  GameController();
+  ~GameController();
 
-    void init();
-    void physicsTick();
-    void drawAll();
-    void run();
-    void stop();
+  void init();
+  void physicsTick();
+  void drawAll();
+  void run();
+  void stop();
 
-    int mountRenderable(RenderElement* element);  
-int mountPhysicsElement(PhysicsElement* element);
-    
-    bool dismountRenderable(int index);
-    bool dismountPhysicsElement(int index);
-    
-    bool dismountRenderable(const RenderElement* element);
-    bool dismountPhysicsElement(const PhysicsElement* element);
-    
-    void clearAllRenderables();
-    void clearAllPhysicsElements();
-    void clearAll();
-    
-    int getRenderablesCount() const { return renderablesSize; }
-    int getPhysicsElementsCount() const { return physicsItemsSize; }
-    bool hasRenderables() const { return renderablesSize > 0; }
-    bool hasPhysicsElements() const { return physicsItemsSize > 0; }
-    
-    RenderElement* getRenderableAt(int index);
-    PhysicsElement* getPhysicsElementAt(int index);
+  int mountRenderable(RenderElement* element);
+  int mountPhysicsElement(PhysicsElement* element);
 
-private:
-    void resizeRenderablesIfNeeded();
-    void resizePhysicsItemsIfNeeded();
+  bool dismountRenderable(int index);
+  bool dismountRenderable(const RenderElement* element);
+  bool dismountPhysicsElement(int index);
+
+  void clearAllRenderables();
+  void clearAllPhysicsElements();
+  void clearAll();
+
+  RenderElement* getRenderableAt(int index);
+  PhysicsElement* getPhysicsElementAt(int index);
 };
 
 #endif
