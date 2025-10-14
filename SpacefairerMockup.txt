@@ -29,16 +29,15 @@ class cargoFix : public task{
         bool toolsNeeded = false;
         int timeTaken = 7;
     public:
-        void cargoFix;
+        void fixCargo;
         //Same deal, pauses player movement for 7 seconds and shows a progress bar
 }
 
 class handRailFix : public task{
     private:
-        bool toolsNeeded = true;
-        int timeTaken = 10;
+        string necessaryTool;
     public:
-        void cargoFix;
+        void fixRail;
         //Checks if player has tools? pauses player movement for 10 seconds : else tells the player to get tools
         // and highlights the toolbox
 }
