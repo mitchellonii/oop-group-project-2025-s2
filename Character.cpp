@@ -56,12 +56,12 @@ void Character::physicsTick() {
   if (std::abs(dy) < 0.01f) dy = 0.0f;
   setPosition(x, y);
 
-  if (x < 0) {
-    x = 0;
+  if (x < 100) {
+    x = 100;
     dx = -dx * 0.5f;
   }
-  if (x > 900 - this->hitboxRadius * 2) {
-    x = 900 - this->hitboxRadius * 2;
+  if (x > 800 - this->hitboxRadius * 2) {
+    x = 800 - this->hitboxRadius * 2;
     dx = -dx * 0.5f;
   }
 }
@@ -73,8 +73,9 @@ void Character::draw(sf::RenderWindow* globalWindow) {
   animationTimer += delta;
 
   const auto& frames = isFacingRight ? walkRightFrames : walkLeftFrames;
-
-  if ((isWalkingLeft || isWalkingRight) && !frames.empty()) {
+  bool isMoving = (dx != 0 || dy != 0);
+  if ((isWalkingLeft || isWalkingRight || isMoving) && !frames.empty() &&
+      isMoving == true) {
     if (animationTimer >= frameDuration) {
       animationTimer = 0.f;
       currentFrame = (currentFrame + 1) % static_cast<int>(frames.size());

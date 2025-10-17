@@ -25,9 +25,9 @@ void GameController::physicsTick() {
 }
 
 void GameController::drawAll() {
-  for (auto* element : physicsItems) element->draw(globalWindow);
   for (auto* element : renderables)
     if (element) element->draw(globalWindow);
+  for (auto* element : physicsItems) element->draw(globalWindow);
 }
 
 void GameController::stop() {
