@@ -12,9 +12,17 @@ class GameController {
  private:
   std::vector<RenderElement*> renderables;
   std::vector<PhysicsElement*> physicsItems;
-
+  PhysicsElement* cargo1;
+  PhysicsElement* cargo2;
+  PhysicsElement* cargo3;
+  RenderElement* navComputer;
+  RenderElement* toolbox;
+  RenderElement* handrail;
+  int cargosRemaining;
   sf::RenderWindow* globalWindow;
   bool runinng;
+  int currentTaskIndex;
+  int currentTaskFramesRemaining;
 
  public:
   GameController();
@@ -33,9 +41,15 @@ class GameController {
   bool dismountRenderable(const RenderElement* element);
   bool dismountPhysicsElement(int index);
 
+  void setCargos(PhysicsElement* c1, PhysicsElement* c2, PhysicsElement* c3);
+  void removeCargo();
   void clearAllRenderables();
   void clearAllPhysicsElements();
   void clearAll();
+
+  void setNavComputer(RenderElement* nav);
+  void setToolbox(RenderElement* box);
+  void setHandrail(RenderElement* rail);
 
   RenderElement* getRenderableAt(int index);
   PhysicsElement* getPhysicsElementAt(int index);

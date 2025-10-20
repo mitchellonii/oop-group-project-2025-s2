@@ -7,7 +7,7 @@
 CountdownText::CountdownText(int x, int y, unsigned int fontSize)
     : TextElement("distance travelled 100%", x, y, fontSize) {
   std::cout << "[CountdownText] Initialized with 300-second default.\n";
-  lastSecond = 300;
+  lastSecond = 10;
 }
 
 void CountdownText::setCountdownEndCallback(
@@ -22,7 +22,7 @@ void CountdownText::draw(sf::RenderWindow* globalWindow) {
   }
 
   float elapsed = countdownClock.getElapsedTime().asSeconds();
-  float ratio = (300.0f - elapsed) / 300.0f;
+  float ratio = (10.0f - elapsed) / 10.0f;
   if (ratio < 0.f) ratio = 0.f;
   if (ratio > 1.f) ratio = 1.f;
 
@@ -36,7 +36,7 @@ void CountdownText::draw(sf::RenderWindow* globalWindow) {
     lastSecond = percent;
   }
 
-  if (elapsed >= 300.0f) {
+  if (elapsed >= 10.0f) {
     if (countdownEndCallback) {
       countdownEndCallback(this);
       countdownEndCallback = nullptr;

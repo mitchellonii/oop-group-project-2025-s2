@@ -10,6 +10,13 @@ GameController::GameController() : runinng(false), globalWindow(nullptr) {
   std::cout << "[GameController] Constructor called.\n";
   renderables.reserve(50);
   physicsItems.reserve(20);
+  cargosRemaining = 3;
+  cargo1 = nullptr;
+  cargo2 = nullptr;
+  cargo3 = nullptr;
+  navComputer = nullptr;
+  toolbox = nullptr;
+  handrail = nullptr;
 }
 
 void GameController::init() {
@@ -281,3 +288,36 @@ GameController::~GameController() {
 
   std::cout << "[GameController] Cleanup complete.\n";
 }
+
+void GameController::setCargos(PhysicsElement* c1, PhysicsElement* c2,
+                               PhysicsElement* c3) {
+  cargo1 = c1;
+  cargo2 = c2;
+  cargo3 = c3;
+}
+
+void GameController::removeCargo() {
+  if (cargosRemaining <= 0) {
+    std::cout << "[GameController] No cargos remaining to remove.\n";
+    return;
+  }
+
+  if (cargosRemaining == 3 && cargo1 != nullptr) {
+    cargo1->setVelocity(15.0, -30.0);
+  } else if (cargosRemaining == 2 && cargo2 != nullptr) {
+    cargo2->setVelocity(15.0, -30.0);
+  } else if (cargosRemaining == 1 && cargo3 != nullptr) {
+    cargo3->setVelocity(15.0, -30.0);
+  } else {
+    std::cout << "[GameController] ERROR: Cargo element is null.\n";
+    return;
+  }
+
+  cargosRemaining--;
+  std::cout << "[GameController] Cargo removed. Cargos remaining: "
+            << cargosRemaining << "\n";
+}
+
+void GameController::setNavComputer(RenderElement* nav) { navComputer = nav; }
+void GameController::setToolbox(RenderElement* box) { toolbox = box; }
+void GameController::setHandrail(RenderElement* rail) { handrail = rail; }

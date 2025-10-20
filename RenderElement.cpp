@@ -12,6 +12,8 @@ RenderElement::RenderElement()
       storedKeyCount(0),
       lx(0),
       ly(0),
+      blinkCountInternal(0),
+      isBlinking(false),
       clickable(false) {}
 
 RenderElement::RenderElement(std::string filePath, int posX, int posY)
@@ -22,6 +24,8 @@ RenderElement::RenderElement(std::string filePath, int posX, int posY)
       storedKeyCount(0),
       lx(0),
       ly(0),
+      blinkCountInternal(0),
+      isBlinking(false),
       clickable(false) {}
 
 void RenderElement::onMount() {}
@@ -116,9 +120,14 @@ void RenderElement::draw(sf::RenderWindow* globalWindow) {
     sprite.setScale(
         sf::Vector2f(static_cast<float>(scaleX), static_cast<float>(scaleY)));
   }
-
+  if (isBlinking && blinkCountInternal < 200) {
+    blinkCountInternal++;
+    if ((blinkCountInternal / 7) % 10 < 3) {
+      return;
+    }
+  }
   globalWindow->draw(sprite);
-
+  return;
   sf::RectangleShape clickRect;
   clickRect.setPosition(
       sf::Vector2f(static_cast<float>(x), static_cast<float>(y)));
@@ -129,7 +138,7 @@ void RenderElement::draw(sf::RenderWindow* globalWindow) {
   clickRect.setOutlineColor(clickable ? sf::Color::Green : sf::Color::Red);
   clickRect.setOutlineThickness(1.0f);
 
-  globalWindow->draw(clickRect);
+  // globalWindow->draw(clickRect);
 }
 
 void RenderElement::setPosition(int newX, int newY) {
@@ -138,3 +147,8 @@ void RenderElement::setPosition(int newX, int newY) {
 }
 
 void RenderElement::updateSpritePath(std::string a) { spriteFilepath = a; }
+
+void RenderElement::setBlinking(bool blink) {
+  isBlinking = blink;
+  blinkCountInternal = 0;
+}

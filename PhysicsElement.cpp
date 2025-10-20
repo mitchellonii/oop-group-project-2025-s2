@@ -51,7 +51,6 @@ void PhysicsElement::draw(sf::RenderWindow* globalWindow) {
 
   globalWindow->draw(sprite);
 
-  // --- Draw clickbox outline (for debugging / clarity) --- REMOVE LATER
   sf::RectangleShape clickRect;
   clickRect.setPosition(
       sf::Vector2f(static_cast<float>(x), static_cast<float>(y)));
@@ -68,7 +67,7 @@ void PhysicsElement::draw(sf::RenderWindow* globalWindow) {
 void PhysicsElement::physicsTick() {
   x += dx;
   y += dy;
-  const float damping = 0.9f;
+  const float damping = 0.97f;
   dx *= damping;
   dy *= damping;
 

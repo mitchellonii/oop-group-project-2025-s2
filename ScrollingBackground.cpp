@@ -105,9 +105,4 @@ void ScrollingBackground::draw(sf::RenderWindow* globalWindow) {
   globalWindow->draw(*sprite2);
 
   // Debug positions
-  std::cout << "[ScrollingBackground] draw() called. "
-            << "Sprite1 Pos: (" << sprite1->getPosition().x << ", "
-            << sprite1->getPosition().y << ") "
-            << "Sprite2 Pos: (" << sprite2->getPosition().x << ", "
-            << sprite2->getPosition().y << ")" << std::endl;
 }

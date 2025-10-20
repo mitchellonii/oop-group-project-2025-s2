@@ -56,12 +56,12 @@ void Character::physicsTick() {
   if (std::abs(dy) < 0.01f) dy = 0.0f;
   setPosition(x, y);
 
-  if (x < 100) {
-    x = 100;
+  if (x < 180) {
+    x = 180;
     dx = -dx * 0.5f;
   }
-  if (x > 800 - this->hitboxRadius * 2) {
-    x = 800 - this->hitboxRadius * 2;
+  if (x > 780 - this->hitboxRadius * 2) {
+    x = 780 - this->hitboxRadius * 2;
     dx = -dx * 0.5f;
   }
 }
