@@ -8,8 +8,8 @@ class Task{
     public:
         Task();
         Task(int timeTaken, bool toolsNeeded);
-        int get_timeTaken;
-        bool get_toolsNeeded;
+        int get_timeTaken();
+        bool get_toolsNeeded();
 };
 
 #endif
