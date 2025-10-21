@@ -30,12 +30,17 @@ srand(time(0));
                 {
                 case 0:
                     //green pirates
+                    //new Pirate(money_pirate_ship.png, )
+                    //setDualogue(true)
+                    
                     break;
                 case 1:
                     //Pink Pirates
+                    //new Pirate(empathetic_pirate_ship.png, )
                     break;
                 case 2:
                     //yellow Pirates
+                    //new Pirate(insecure_pirate_ship.png, )
                     break;
                 }
             taskActive = true;
