@@ -34,7 +34,7 @@ void ProgressBar::draw(sf::RenderWindow* window) {
       {static_cast<float>(x) + insetX, static_cast<float>(y) + insetY});
   fillRect.setFillColor(sf::Color(235, 171, 52));
 
-  window->draw(fillRect);
+  if (!this->getIsHidden()) window->draw(fillRect);
 
   // Draw outline sprite at original position
   sf::Sprite outlineSprite(texture);
@@ -46,8 +46,5 @@ void ProgressBar::draw(sf::RenderWindow* window) {
                             static_cast<float>(height) / texSize.y});
   }
 
-  window->draw(outlineSprite);
-
-  std::cout << "[ProgressBar] Drew progress bar at " << progressPercentage
-            << "% at position (" << x << ", " << y << ")\n";
+  if (!this->getIsHidden()) window->draw(outlineSprite);
 }

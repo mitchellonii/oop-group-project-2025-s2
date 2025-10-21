@@ -26,6 +26,25 @@
         "ios": "cpp",
         "iostream": "cpp",
         "__locale": "cpp",
-        "locale": "cpp"
+        "locale": "cpp",
+        "__bit_reference": "cpp",
+        "__hash_table": "cpp",
+        "__node_handle": "cpp",
+        "__split_buffer": "cpp",
+        "array": "cpp",
+        "bitset": "cpp",
+        "clocale": "cpp",
+        "ctime": "cpp",
+        "istream": "cpp",
+        "mutex": "cpp",
+        "print": "cpp",
+        "ratio": "cpp",
+        "streambuf": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "cstdarg": "cpp",
+        "iomanip": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
     }
 }

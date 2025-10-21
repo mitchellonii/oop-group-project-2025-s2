@@ -117,7 +117,7 @@ void TextElement::draw(sf::RenderWindow* globalWindow) {
   }
 
   // Draw the text itself
-  globalWindow->draw(sfText);
+  if (!this->getIsHidden()) globalWindow->draw(sfText);
 
   // === 🔲 Draw the clickable box for debugging/visualization ===
   sf::Vector2i pos = this->getPosition();  // top-left corner
@@ -139,7 +139,6 @@ void TextElement::draw(sf::RenderWindow* globalWindow) {
 void TextElement::setText(const std::string& newText) {
   text = newText;
   sfText.setString(newText);
-  std::cout << "[TextElement] Text updated to: \"" << newText << "\"\n";
 }
 
 void TextElement::setColor(sf::Color color) {

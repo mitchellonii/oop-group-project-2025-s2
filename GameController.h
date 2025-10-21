@@ -7,6 +7,8 @@
 
 #include "PhysicsElement.h"
 #include "RenderElement.h"
+#include "Task.h"
+#include "TextElement.h"
 
 class GameController {
  private:
@@ -23,6 +25,16 @@ class GameController {
   bool runinng;
   int currentTaskIndex;
   int currentTaskFramesRemaining;
+  bool dismountAllRenderableNextFrame;
+  bool dismountAllPhysicsNextFrame;
+  bool won;
+  bool hasTask;
+  Task* currentTask;  // ✅ Use pointer for polymorphism
+  bool gameStarted;
+  int framesRemaining;
+  TextElement* countdown;
+  bool countdownExists;
+  bool lost;
 
  public:
   GameController();
@@ -33,20 +45,30 @@ class GameController {
   void drawAll();
   void run();
   void stop();
-
+  void setWon(bool w);
   int mountRenderable(RenderElement* element);
   int mountPhysicsElement(PhysicsElement* element);
-
-  bool dismountRenderable(int index);
+  int getFramesRemaining();
+  void setFramesRemaining(int h);
+  bool getGameStarted();
+  void setGameStarted(bool g);
   bool dismountRenderable(const RenderElement* element);
-  bool dismountPhysicsElement(int index);
+  bool dismountRenderable(int index);
+  int frameCounter;
+  bool getHasTask();
+  Task* getCurrentTask();        // ✅ Return pointer
+  void setCurrentTask(Task* h);  // ✅ Accept pointer
+  void setHasTask(bool t);
 
+  RenderElement* getToolbox();
+  bool dismountPhysicsElement(int index);
+  void setLost(bool l);
   void setCargos(PhysicsElement* c1, PhysicsElement* c2, PhysicsElement* c3);
   void removeCargo();
   void clearAllRenderables();
   void clearAllPhysicsElements();
   void clearAll();
-
+  void setCountdown(TextElement* a);
   void setNavComputer(RenderElement* nav);
   void setToolbox(RenderElement* box);
   void setHandrail(RenderElement* rail);

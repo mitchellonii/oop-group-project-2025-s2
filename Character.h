@@ -8,12 +8,14 @@
 
 #include "PhysicsElement.h"
 
+class GameController;
+
 class Character : public PhysicsElement {
  private:
   bool isWalkingLeft;
   bool isWalkingRight;
   bool isFacingRight;
-
+  GameController* controller;
   std::vector<std::shared_ptr<sf::Texture>> walkLeftFrames;
   std::vector<std::shared_ptr<sf::Texture>> walkRightFrames;
 
@@ -31,7 +33,7 @@ class Character : public PhysicsElement {
   Character(const std::string& imageFilePath, int x, int y, int hitboxR,
             const std::vector<std::string>& walkLeftPaths,
             const std::vector<std::string>& walkRightPaths,
-            float frameDurationSec);
+            float frameDurationSec, GameController* controller);
 
   void onMount() override;
   void physicsTick() override;

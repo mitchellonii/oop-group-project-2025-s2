@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "GameController.h"
 Character::Character()
     : PhysicsElement(),
       isWalkingLeft(false),
@@ -14,12 +15,14 @@ Character::Character()
 Character::Character(const std::string& imageFilePath, int xPos, int yPos,
                      int hitboxR, const std::vector<std::string>& walkLeftPaths,
                      const std::vector<std::string>& walkRightPaths,
-                     float frameDurationSec)
+                     float frameDurationSec, GameController* c)
     : PhysicsElement(imageFilePath, xPos, yPos, hitboxR),
       isWalkingLeft(false),
       isWalkingRight(false),
       isFacingRight(true),
       currentFrame(0),
+      controller(c),
+      heldItem("none"),
       frameDuration(frameDurationSec),
       animationTimer(0.0f) {
   walkLeftFrames.reserve(walkLeftPaths.size());
@@ -63,6 +66,10 @@ void Character::physicsTick() {
   if (x > 780 - this->hitboxRadius * 2) {
     x = 780 - this->hitboxRadius * 2;
     dx = -dx * 0.5f;
+  }
+
+  if (this->heldItem == "toolbox") {
+    controller->getToolbox()->setPosition(x + 30, 250);
   }
 }
 
@@ -113,14 +120,97 @@ void Character::stop() {
 }
 
 void Character::handleInput() {
+  // Log start of input handling
+  std::cout << "[DEBUG] Handling input for Character at position x=" << x
+            << ", heldItem=" << heldItem << std::endl;
+
+  // Movement input
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+    std::cout << "[DEBUG] Key A pressed -> Moving Left" << std::endl;
     this->moveLeft();
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+    std::cout << "[DEBUG] Key D pressed -> Moving Right" << std::endl;
     this->moveRight();
   } else {
+    std::cout << "[DEBUG] No horizontal key pressed -> Stopping" << std::endl;
     stop();
   }
+
+  // Interaction input
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
+    std::cout << "[DEBUG] Key E pressed -> Attempting interaction" << std::endl;
+
+    int currentTaskId = controller->getCurrentTask()
+                            ? controller->getCurrentTask()->getTaskId()
+                            : -1;
+
+    if (240 < x && x < 320 && currentTaskId == 1 && this->heldItem == "none") {
+      this->heldItem = "toolbox";
+      std::cout << "[DEBUG] Picked up toolbox!" << std::endl;
+    } else if (this->heldItem == "toolbox" && currentTaskId == 1 && x > 650) {
+      std::cout << "placed toolbox down in acceptable location" << std::endl;
+      this->heldItem = "none";
+      controller->getToolbox()->setPosition(287, 390);
+      controller->getCurrentTask()->complete();
+    } else {
+      std::cout << "[DEBUG] Interaction failed: conditions not met"
+                << std::endl;
+    }
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+    std::string currentTaskDir = controller->getCurrentTask()->getDirection();
+    int currentTaskId = controller->getCurrentTask()
+                            ? controller->getCurrentTask()->getTaskId()
+                            : -1;
+
+    if (x < 200 && currentTaskId == 2 && this->heldItem == "none" &&
+        currentTaskDir == "up") {
+      std::cout << "fixed navs" << std::endl;
+      controller->getCurrentTask()->complete();
+    }
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+    std::string currentTaskDir = controller->getCurrentTask()->getDirection();
+    int currentTaskId = controller->getCurrentTask()
+                            ? controller->getCurrentTask()->getTaskId()
+                            : -1;
+
+    if (x < 200 && currentTaskId == 2 && this->heldItem == "none" &&
+        currentTaskDir == "down") {
+      std::cout << "fixed navs" << std::endl;
+      controller->getCurrentTask()->complete();
+    }
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
+    std::string currentTaskDir = controller->getCurrentTask()->getDirection();
+    int currentTaskId = controller->getCurrentTask()
+                            ? controller->getCurrentTask()->getTaskId()
+                            : -1;
+
+    if (x < 200 && currentTaskId == 2 && this->heldItem == "none" &&
+        currentTaskDir == "left") {
+      std::cout << "fixed navs" << std::endl;
+      controller->getCurrentTask()->complete();
+    }
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
+    std::string currentTaskDir = controller->getCurrentTask()->getDirection();
+    int currentTaskId = controller->getCurrentTask()
+                            ? controller->getCurrentTask()->getTaskId()
+                            : -1;
+
+    if (x < 200 && currentTaskId == 2 && this->heldItem == "none" &&
+        currentTaskDir == "right") {
+      std::cout << "fixed navs" << std::endl;
+      controller->getCurrentTask()->complete();
+    }
+  }
+
+  // Log end of input handling
+  std::cout << "[DEBUG] Input handling complete for Character. Current state: "
+            << "x=" << x << ", heldItem=" << heldItem << std::endl;
 }
+
 bool Character::hasItem() const { return !heldItem.empty(); }
 
 std::string Character::getHeldItem() const { return heldItem; }

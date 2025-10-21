@@ -8,6 +8,7 @@ CountdownText::CountdownText(int x, int y, unsigned int fontSize)
     : TextElement("distance travelled 100%", x, y, fontSize) {
   std::cout << "[CountdownText] Initialized with 300-second default.\n";
   lastSecond = 10;
+  countdownFinished = false;
 }
 
 void CountdownText::setCountdownEndCallback(
@@ -37,11 +38,20 @@ void CountdownText::draw(sf::RenderWindow* globalWindow) {
   }
 
   if (elapsed >= 10.0f) {
-    if (countdownEndCallback) {
-      countdownEndCallback(this);
-      countdownEndCallback = nullptr;
+    if (!countdownFinished) {
+      countdownFinished = true;
+      std::cout << "finished" << std::endl;
     }
   }
 
   TextElement::draw(globalWindow);
+}
+
+bool CountdownText::getCountdownFinished() { return countdownFinished; }
+void CountdownText::runCountdownEndCallback() {
+  if (countdownEndCallback) {
+    std::cout << "cb" << std::endl;
+    countdownEndCallback(this);
+    countdownEndCallback = nullptr;
+  }
 }

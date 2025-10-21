@@ -66,26 +66,25 @@ int main() {
 
   Character* player =
       new Character("assets/RoggertWalkRight/Rog_walk_right_frame-1.png", 100,
-                    200, 50, leftFrames, rightFrames, 0.1f);
+                    230, 50, leftFrames, rightFrames, 0.1f, &engine);
 
-  button->setOnClickCallback([&button, &engine, &audio, &wallpaper, &title,
-                              &player]() {
+  // Store pointer to engine for callbacks
+  GameController* enginePtr = &engine;
+
+  button->setOnClickCallback([button, enginePtr, audio, wallpaper, title,
+                              player]() {
     // Remove start screen
-    engine.dismountRenderable(title);
-    engine.dismountRenderable(wallpaper);
+    enginePtr->dismountRenderable(title);
+    enginePtr->dismountRenderable(wallpaper);
     audio->stop();
 
     // Countdown background
     RenderElement* countdownBG =
         new RenderElement("assets/text-display-diegetic_scaled.png", 390, 45);
 
-    // Countdown
-    CountdownText* countdown = new CountdownText(522, 180, 20);
-
-    // "YOU WON" text (not yet mounted)
-    TextElement* youWonText =
-        new TextElement("YOU WON!", 350, 250, 50, sf::Color::Yellow);
-    youWonText->setBold(true);
+    // Countdown - IMPORTANT: This needs to persist
+    TextElement* countdown =
+        new TextElement("Distance travelled: 0%", 522, 180, 20);
 
     // Game background and elements
     ScrollingBackground* bgGame = new ScrollingBackground(
@@ -94,7 +93,6 @@ int main() {
         new RenderElement("assets/Bongo_Frontier_900.png", 0, 70);
     RenderElement* computer =
         new RenderElement("assets/CourseCorrectComputer_225.png", 4, 325);
-    computer->setBlinking(true);
     PhysicsElement* cargo1 =
         new PhysicsElement("assets/CargoCrate_140.png", 800, 370, 10);
     PhysicsElement* cargo2 =
@@ -105,49 +103,38 @@ int main() {
         new RenderElement("assets/Toolbox_70.png", 287, 390);
     RenderElement* Handrail =
         new RenderElement("assets/Handrail_70.png", 720, 320);
-    ProgressBar* progressBar =
-        new ProgressBar("assets/progress_bar.png", 300, 40, 200, 20);
-    progressBar->setProgress(45);
 
-    // Mount everything
+    // Mount everything IN THE CORRECT ORDER
     bgGame->onMount();
-    engine.mountRenderable(bgGame);
-    engine.mountRenderable(ship);
-    engine.mountRenderable(countdownBG);
-    engine.mountRenderable(countdown);
-    engine.mountRenderable(computer);
-    engine.mountPhysicsElement(cargo1);
-    engine.mountPhysicsElement(cargo2);
-    engine.mountPhysicsElement(cargo3);
-    engine.setCargos(cargo1, cargo2, cargo3);
-    engine.setHandrail(Handrail);
-    engine.setNavComputer(computer);
-    engine.setToolbox(Toolbox);
-    engine.mountRenderable(Toolbox);
-    engine.mountRenderable(Handrail);
-    engine.mountPhysicsElement(player);
-    engine.mountRenderable(progressBar);
+    enginePtr->mountRenderable(bgGame);
+    enginePtr->mountRenderable(ship);
+    enginePtr->mountRenderable(countdownBG);
+
+    // Mount countdown BEFORE setting it in engine
+    enginePtr->mountRenderable(countdown);
+
+    enginePtr->mountRenderable(computer);
+    enginePtr->mountPhysicsElement(cargo1);
+    enginePtr->mountPhysicsElement(cargo2);
+    enginePtr->mountPhysicsElement(cargo3);
+    enginePtr->setCargos(cargo1, cargo2, cargo3);
+    enginePtr->setHandrail(Handrail);
+    enginePtr->setNavComputer(computer);
+    enginePtr->setToolbox(Toolbox);
+    enginePtr->mountRenderable(Handrail);
+    enginePtr->mountPhysicsElement(player);
+    enginePtr->mountRenderable(Toolbox);
 
     // Remove start button
-    engine.dismountRenderable(button);
+    enginePtr->dismountRenderable(button);
 
-    // COUNTDOWN END CALLBACK AT THE VERY BOTTOM
-    countdown->setCountdownEndCallback(
-        [&engine, &bgGame, &ship, &countdownBG, &countdown, &computer, &cargo1,
-         &cargo2, &cargo3, &Toolbox, &Handrail, &player, &progressBar,
-         &youWonText](CountdownText* ct) {
-          // Remove each element individually
-          engine.dismountRenderable(ship);
-          // engine.dismountRenderable(countdown);
-          engine.dismountRenderable(computer);
+    // CRITICAL: Set countdown pointer in engine AFTER mounting it
+    enginePtr->setCountdown(countdown);
 
-          engine.dismountRenderable(Toolbox);
-          engine.dismountRenderable(Handrail);
-          engine.dismountRenderable(progressBar);
+    std::cout << "[Main] Countdown set at address: " << countdown << std::endl;
 
-          // Show "YOU WON"
-          engine.mountRenderable(youWonText);
-        });
+    // Set game as started LAST - only after everything is set up
+    enginePtr->setGameStarted(true);
   });
 
   engine.run();

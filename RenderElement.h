@@ -17,6 +17,7 @@ class RenderElement {
   int ly;
   int blinkCountInternal;
   bool isBlinking;
+  bool skipDraw;
   int storedKeyCount = 0;
   sf::Keyboard::Key* keybordEvents = nullptr;
 
@@ -35,6 +36,9 @@ class RenderElement {
   sf::Vector2i getPosition() const;
   sf::Vector2i getClickbox() const;
   void setBlinking(bool blink);
+  bool getBlinking();
+  void setHidden(bool h);
+  bool getIsHidden();
   void setOnClickCallback(std::function<void()> callback);
   void setKeyboardEventListners(const sf::Keyboard::Key* keys[],
                                 std::size_t length);
