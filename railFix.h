@@ -12,6 +12,7 @@ class railFix : public Task {
  private:
   string necessaryTool;
   TextElement* alert;
+  TextElement* alert2;
   RenderElement* box;
 
  public:

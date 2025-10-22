@@ -12,11 +12,16 @@ railFix::railFix(int time, bool tool, int taskId, GameController* controller)
   box = b;
   controller->mountRenderable(box);
 
-  TextElement* a = new TextElement("Fix the rail", 525, 45);
+  TextElement* a = new TextElement("Fix the rail", 525, 40);
   alert = a;
+  TextElement* c = new TextElement("Press e to interact", 525, 65);
+  c->setFontSize(12);
+  alert2 = c;
 
   controller->mountRenderable(alert);
+  controller->mountRenderable(alert2);
   alert->setBlinking(true);
+  alert2->setBlinking(true);
   alert->setAnimationStyle(TextAnimation::Ellipsis);
 
   ProgressBar* progressBar =
@@ -42,5 +47,6 @@ void railFix::complete() {
   progress->setHidden(true);
   alert->setHidden(true);
   box->setHidden(true);
+  alert2->setHidden(true);
   this->completed = true;
 }
