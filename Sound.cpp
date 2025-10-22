@@ -27,9 +27,7 @@ float MusicTrack::getVolume() const { return music.getVolume(); }
 void MusicTrack::setPitch(float pitch) { music.setPitch(pitch); }
 float MusicTrack::getPitch() const { return music.getPitch(); }
 
-sf::SoundSource::Status MusicTrack::getStatus() const {
-  return music.getStatus();
-}
+sf::Vector3f MusicTrack::getPosition() const { return music.getPosition(); }
 
 void MusicTrack::setPlayingOffset(sf::Time offset) {
   music.setPlayingOffset(offset);

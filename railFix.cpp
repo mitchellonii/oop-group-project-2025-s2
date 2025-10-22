@@ -6,7 +6,6 @@
 #include "ProgressBar.h"
 #include "RenderElement.h"
 #include "TextElement.h"
-// Call the parent constructor with all three parameters
 railFix::railFix(int time, bool tool, int taskId, GameController* controller)
     : Task(taskId, time, tool, controller) {
   RenderElement* b = new RenderElement("assets/Text_box_resized.png", 500, 40);
@@ -29,12 +28,11 @@ railFix::railFix(int time, bool tool, int taskId, GameController* controller)
 
 void railFix::tick() {
   if (ticksRemaining <= 0) {
-    return;  // Task complete
+    return;
   }
 
   ticksRemaining--;
 
-  // Calculate progress as percentage (0.0 to 1.0)
   float progressPercent = 1.0f - (static_cast<float>(ticksRemaining) /
                                   static_cast<float>(this->timeTaken * 30));
   progress->setProgress(static_cast<int>(progressPercent * 100));

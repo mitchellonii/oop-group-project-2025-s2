@@ -13,10 +13,10 @@ class ScrollingBackground : public RenderElement {
   std::unique_ptr<sf::Sprite> sprite1;
   std::unique_ptr<sf::Sprite> sprite2;
 
-  float scrollSpeed;      // pixels per second
-  bool horizontal;        // true = horizontal scroll
-  float loopWidth;        // width of each sprite in pixels
-  float scrollDirection;  // 1 = normal, -1 = reversed
+  float scrollSpeed;
+  bool horizontal;
+  float loopWidth;
+  float scrollDirection;
 
  public:
   ScrollingBackground(std::string imageFilePath, float speed = 100.0f,
@@ -29,7 +29,6 @@ class ScrollingBackground : public RenderElement {
   virtual void draw(sf::RenderWindow* globalWindow) override;
   void update(float deltaTime);
 
-  // Optional: set direction dynamically
   void setDirection(float dir) { scrollDirection = dir; }
 };
 

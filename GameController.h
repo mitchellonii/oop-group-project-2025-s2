@@ -29,7 +29,7 @@ class GameController {
   bool dismountAllPhysicsNextFrame;
   bool won;
   bool hasTask;
-  Task* currentTask;  // ✅ Use pointer for polymorphism
+  Task* currentTask;
   bool gameStarted;
   int framesRemaining;
   TextElement* countdown;
@@ -56,8 +56,8 @@ class GameController {
   bool dismountRenderable(int index);
   int frameCounter;
   bool getHasTask();
-  Task* getCurrentTask();        // ✅ Return pointer
-  void setCurrentTask(Task* h);  // ✅ Accept pointer
+  Task* getCurrentTask();
+  void setCurrentTask(Task* h);
   void setHasTask(bool t);
 
   RenderElement* getToolbox();

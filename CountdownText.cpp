@@ -29,7 +29,6 @@ void CountdownText::draw(sf::RenderWindow* globalWindow) {
 
   int percent = static_cast<int>(ratio * 100.0f);
 
-  // Only update if value changed (optional optimization)
   if (percent != lastSecond) {
     std::ostringstream ss;
     ss << "distance travelled: " << 100 - percent << "%";

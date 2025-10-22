@@ -3,7 +3,6 @@
 #include <iostream>
 
 TextElement::TextElement() : RenderElement(), sfText(*new sf::Font()) {
-  std::cout << "[TextElement] Default constructor called.\n";
   text = "";
   textColor = sf::Color::White;
   fontSize = 24;
@@ -22,15 +21,12 @@ TextElement::TextElement() : RenderElement(), sfText(*new sf::Font()) {
   sfText.setStyle(textStyle);
 
   if (!fontLoaded) {
-    std::cout << "[TextElement] WARNING: Font failed to load in constructor!\n";
   }
 }
 
 TextElement::TextElement(const std::string& text, int x, int y,
                          unsigned int fontSize)
     : RenderElement(), sfText(*new sf::Font()) {
-  std::cout
-      << "[TextElement] Constructor called with text, position, and size.\n";
   this->text = text;
   this->fontSize = fontSize;
   this->textColor = sf::Color::White;
@@ -50,15 +46,12 @@ TextElement::TextElement(const std::string& text, int x, int y,
   sfText.setStyle(textStyle);
 
   if (!fontLoaded) {
-    std::cout << "[TextElement] WARNING: Font failed to load in constructor!\n";
   }
 }
 
 TextElement::TextElement(const std::string& text, int x, int y,
                          unsigned int fontSize, sf::Color color)
     : RenderElement(), sfText(*new sf::Font()) {
-  std::cout << "[TextElement] Constructor called with text, position, size, "
-               "and color.\n";
   this->text = text;
   this->fontSize = fontSize;
   this->textColor = color;
@@ -78,12 +71,10 @@ TextElement::TextElement(const std::string& text, int x, int y,
   sfText.setStyle(textStyle);
 
   if (!fontLoaded) {
-    std::cout << "[TextElement] WARNING: Font failed to load in constructor!\n";
   }
 }
 
 TextElement::~TextElement() {
-  std::cout << "[TextElement] Destructor called.\n";
   if (font != nullptr) {
     delete font;
     font = nullptr;
@@ -91,8 +82,6 @@ TextElement::~TextElement() {
 }
 
 void TextElement::onMount() {
-  std::cout << "[TextElement] onMount() called.\n";
-
   if (!fontLoaded) {
     loadSystemFont();
   }
@@ -100,37 +89,32 @@ void TextElement::onMount() {
 
 void TextElement::draw(sf::RenderWindow* globalWindow) {
   if (globalWindow == nullptr || !fontLoaded) {
-    std::cout << "[TextElement] ERROR: Cannot draw, font or window invalid.\n";
     return;
   }
 
-  // Handle animation
   if (animationType == TextAnimation::Ellipsis) {
     sf::Time elapsed = animationClock.getElapsedTime();
 
-    if (elapsed.asMilliseconds() >= 300) {        // Change frame every 300ms
-      animationFrame = (animationFrame + 1) % 4;  // 0 to 3
+    if (elapsed.asMilliseconds() >= 300) {
+      animationFrame = (animationFrame + 1) % 4;
       std::string dots(animationFrame, '.');
       sfText.setString(baseText + dots);
       animationClock.restart();
     }
   }
 
-  // Draw the text itself
   if (!this->getIsHidden()) globalWindow->draw(sfText);
 
-  // === 🔲 Draw the clickable box for debugging/visualization ===
-  sf::Vector2i pos = this->getPosition();  // top-left corner
-  sf::Vector2i box = this->getClickbox();  // width & height
+  sf::Vector2i pos = this->getPosition();
+  sf::Vector2i box = this->getClickbox();
 
   sf::RectangleShape clickRect;
   clickRect.setPosition(
       sf::Vector2f(static_cast<float>(pos.x), static_cast<float>(pos.y)));
   clickRect.setSize(
       sf::Vector2f(static_cast<float>(box.x), static_cast<float>(box.y)));
-  clickRect.setFillColor(sf::Color::Transparent);  // no fill
-  clickRect.setOutlineColor(
-      sf::Color(0, 255, 0, 180));  // semi-transparent green
+  clickRect.setFillColor(sf::Color::Transparent);
+  clickRect.setOutlineColor(sf::Color(0, 255, 0, 180));
   clickRect.setOutlineThickness(1.0f);
 
   globalWindow->draw(clickRect);
@@ -180,30 +164,19 @@ void TextElement::setUnderlined(bool underlined) {
   }
 }
 
-bool TextElement::loadFont(const std::string& fontPath) {
-  std::cout << "[TextElement] loadFont() called but embedded font is used "
-               "exclusively.\n";
-  return false;
-}
+bool TextElement::loadFont(const std::string& fontPath) { return false; }
 
 bool TextElement::loadSystemFont() {
-  std::cout << "[TextElement] Loading embedded font from memory...\n";
-
   if (font == nullptr) {
-    std::cout << "[TextElement] ERROR: Font pointer is null!\n";
     return false;
   }
 
   if (font->openFromMemory(fontData, fontData_len)) {
     fontLoaded = true;
     sfText.setFont(*font);
-    std::cout
-        << "[TextElement] Successfully loaded embedded font from memory!\n";
     return true;
   }
 
-  std::cout
-      << "[TextElement] ERROR: Failed to load embedded font from memory!\n";
   fontLoaded = false;
   return false;
 }

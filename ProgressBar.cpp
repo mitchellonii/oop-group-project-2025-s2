@@ -10,8 +10,6 @@ ProgressBar::ProgressBar(std::string imageFilePath, int x, int y, int width,
   this->x = x;
   this->y = y;
   if (!texture.loadFromFile(imageFilePath)) {
-    std::cerr << "[ProgressBar] Failed to load texture: " << imageFilePath
-              << "\n";
   }
 }
 
@@ -20,15 +18,12 @@ void ProgressBar::setProgress(int percentage) {
 }
 
 void ProgressBar::draw(sf::RenderWindow* window) {
-  // Inset values
   const float insetX = 10.f;
   const float insetY = 3.f;
 
-  // Calculate fill width with inset applied
   float fillWidth = (width - 2 * insetX) * (progressPercentage / 100.f);
   float fillHeight = height - 2 * insetY;
 
-  // Draw filled portion inset inside the outline
   sf::RectangleShape fillRect(sf::Vector2f(fillWidth, fillHeight));
   fillRect.setPosition(
       {static_cast<float>(x) + insetX, static_cast<float>(y) + insetY});
@@ -36,7 +31,6 @@ void ProgressBar::draw(sf::RenderWindow* window) {
 
   if (!this->getIsHidden()) window->draw(fillRect);
 
-  // Draw outline sprite at original position
   sf::Sprite outlineSprite(texture);
   outlineSprite.setPosition({static_cast<float>(x), static_cast<float>(y)});
 

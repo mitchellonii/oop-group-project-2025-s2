@@ -24,7 +24,7 @@ class MusicTrack {
   void setPitch(float pitch);
   float getPitch() const;
 
-  sf::Music::Status getStatus() const;
+  sf::Vector3f getPosition() const;
 
   void setPlayingOffset(sf::Time offset);
   sf::Time getPlayingOffset() const;

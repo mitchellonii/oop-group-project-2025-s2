@@ -94,20 +94,15 @@ sf::Vector2i RenderElement::getClickbox() const { return sf::Vector2i(lx, ly); }
 
 void RenderElement::draw(sf::RenderWindow* globalWindow) {
   if (!globalWindow) {
-    std::cout << "[RenderElement] ERROR: globalWindow is null.\n";
     return;
   }
 
   if (spriteFilepath.empty()) {
-    std::cout << "[RenderElement] WARNING: spriteFilepath is empty, nothing to "
-                 "draw.\n";
     return;
   }
 
   sf::Texture texture;
   if (!texture.loadFromFile(spriteFilepath)) {
-    std::cout << "[RenderElement] ERROR: Failed to load texture from "
-              << spriteFilepath << std::endl;
     return;
   }
 

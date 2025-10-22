@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "PhysicsElement.h"
-
+#include "Sound.h"
 class GameController;
 
 class Character : public PhysicsElement {
@@ -18,7 +18,7 @@ class Character : public PhysicsElement {
   GameController* controller;
   std::vector<std::shared_ptr<sf::Texture>> walkLeftFrames;
   std::vector<std::shared_ptr<sf::Texture>> walkRightFrames;
-
+  int counter;
   int currentFrame;
   float frameDuration;
   float animationTimer;

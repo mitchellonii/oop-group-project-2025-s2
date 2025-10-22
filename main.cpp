@@ -17,7 +17,6 @@ int main() {
 
   engine.init();
 
-  // Initial background and title
   ScrollingBackground* wallpaper =
       new ScrollingBackground("assets/bg.jpg", 10, true, 900, -1.0f);
   wallpaper->onMount();
@@ -35,11 +34,6 @@ int main() {
       new TextElement("Click to Start", 385, 395, 20, sf::Color::White);
   instructionText->setBold(true);
   engine.mountRenderable(instructionText);
-
-  MusicTrack* audio = new MusicTrack();
-  audio->openFromFile("assets/music.ogg");
-  audio->play();
-  audio->setLoop(true);
 
   button->setClickable(true);
   button->setClickboxSize(200, 20);
@@ -68,25 +62,18 @@ int main() {
       new Character("assets/RoggertWalkRight/Rog_walk_right_frame-1.png", 100,
                     230, 50, leftFrames, rightFrames, 0.1f, &engine);
 
-  // Store pointer to engine for callbacks
   GameController* enginePtr = &engine;
 
-  button->setOnClickCallback([button, enginePtr, audio, wallpaper, title,
-                              player]() {
-    // Remove start screen
+  button->setOnClickCallback([button, enginePtr, wallpaper, title, player]() {
     enginePtr->dismountRenderable(title);
     enginePtr->dismountRenderable(wallpaper);
-    audio->stop();
 
-    // Countdown background
     RenderElement* countdownBG =
         new RenderElement("assets/text-display-diegetic_scaled.png", 390, 45);
 
-    // Countdown - IMPORTANT: This needs to persist
     TextElement* countdown =
         new TextElement("Distance travelled: 0%", 522, 180, 20);
 
-    // Game background and elements
     ScrollingBackground* bgGame = new ScrollingBackground(
         "assets/Spacefairer_background_scaled.png", 50, true, 5625, 1.0f);
     RenderElement* ship =
@@ -104,13 +91,11 @@ int main() {
     RenderElement* Handrail =
         new RenderElement("assets/Handrail_70.png", 720, 320);
 
-    // Mount everything IN THE CORRECT ORDER
     bgGame->onMount();
     enginePtr->mountRenderable(bgGame);
     enginePtr->mountRenderable(ship);
     enginePtr->mountRenderable(countdownBG);
 
-    // Mount countdown BEFORE setting it in engine
     enginePtr->mountRenderable(countdown);
 
     enginePtr->mountRenderable(computer);
@@ -125,15 +110,12 @@ int main() {
     enginePtr->mountPhysicsElement(player);
     enginePtr->mountRenderable(Toolbox);
 
-    // Remove start button
     enginePtr->dismountRenderable(button);
 
-    // CRITICAL: Set countdown pointer in engine AFTER mounting it
     enginePtr->setCountdown(countdown);
 
     std::cout << "[Main] Countdown set at address: " << countdown << std::endl;
 
-    // Set game as started LAST - only after everything is set up
     enginePtr->setGameStarted(true);
   });
 

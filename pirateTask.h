@@ -15,6 +15,13 @@ class pirateTask : public Task {
   RenderElement* box;
   RenderElement* ship;
   RenderElement* pirate;
+  RenderElement* box1;
+  TextElement* text1;
+  RenderElement* box2;
+  TextElement* text2;
+  RenderElement* box3;
+  TextElement* text3;
+  int currentSelected;
 
  public:
   pirateTask(int timeTaken, string type, int taskId,

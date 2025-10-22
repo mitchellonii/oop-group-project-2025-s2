@@ -6,7 +6,6 @@
 #include "ProgressBar.h"
 #include "RenderElement.h"
 #include "TextElement.h"
-// Call the parent constructor with all three parameters
 allignNav::allignNav(int time, string direction, int taskId,
                      GameController* controller)
     : Task(taskId, time, "null", controller) {
@@ -16,6 +15,7 @@ allignNav::allignNav(int time, string direction, int taskId,
   controller->mountRenderable(box);
 
   TextElement* a = new TextElement("Allign navs: " + direction, 525, 45);
+  a->setFontSize(20);
   alert = a;
 
   controller->mountRenderable(alert);
@@ -31,12 +31,11 @@ allignNav::allignNav(int time, string direction, int taskId,
 
 void allignNav::tick() {
   if (ticksRemaining <= 0) {
-    return;  // Task complete
+    return;
   }
 
   ticksRemaining--;
 
-  // Calculate progress as percentage (0.0 to 1.0)
   float progressPercent = 1.0f - (static_cast<float>(ticksRemaining) /
                                   static_cast<float>(this->timeTaken * 30));
   progress->setProgress(static_cast<int>(progressPercent * 100));

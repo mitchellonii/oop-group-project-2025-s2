@@ -6,7 +6,7 @@ class ProgressBar;
 
 class Task {
  protected:
-  int taskId;  // Use taskId consistently, not id
+  int taskId;
   int timeTaken;
   bool toolsNeeded;
   GameController *controller;

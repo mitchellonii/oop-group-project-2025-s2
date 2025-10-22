@@ -5,6 +5,7 @@
 
 #include "Character.h"
 #include "CountdownText.h"
+#include "Sound.h"
 #include "allignNav.h"
 #include "font_data.h"
 #include "pirateTask.h"
@@ -15,8 +16,8 @@ GameController::GameController()
       dismountAllRenderableNextFrame(false),
       dismountAllPhysicsNextFrame(false) {
   std::cout << "[GameController] Constructor called.\n";
-  renderables.reserve(50);
-  physicsItems.reserve(20);
+  renderables.reserve(100);
+  physicsItems.reserve(40);
   cargosRemaining = 3;
   cargo1 = nullptr;
   cargo2 = nullptr;
@@ -35,7 +36,6 @@ GameController::GameController()
 }
 
 void GameController::init() {
-  std::cout << "[GameController] Init called.\n";
   globalWindow =
       new sf::RenderWindow(sf::VideoMode({900u, 500u}), "Spacefairer v0.1");
 }
@@ -54,99 +54,64 @@ void GameController::drawAll() {
     if (element) element->draw(globalWindow);
 }
 
-void GameController::stop() {
-  std::cout << "[GameController] stop() called. Stopping game loop.\n";
-  runinng = false;
-}
+void GameController::stop() { runinng = false; }
 
 int GameController::mountRenderable(RenderElement* element) {
   if (!element) {
-    std::cout << "[GameController] ERROR: Cannot mount null renderable!\n";
     return -1;
   }
   renderables.push_back(element);
-  std::cout << "[GameController] Mounted renderable at " << element
-            << ". Total: " << renderables.size() << "\n";
   return static_cast<int>(renderables.size() - 1);
 }
 
 int GameController::mountPhysicsElement(PhysicsElement* element) {
   if (!element) {
-    std::cout << "[GameController] ERROR: Cannot mount null physics element!\n";
     return -1;
   }
   physicsItems.push_back(element);
-  std::cout << "[GameController] Mounted physics element. Total: "
-            << physicsItems.size() << "\n";
   return static_cast<int>(physicsItems.size() - 1);
 }
 
-// CRITICAL FIX: Don't delete when dismounting by pointer!
-// The object is owned by whoever created it (the lambda in main)
 bool GameController::dismountRenderable(const RenderElement* element) {
   if (!element) {
-    std::cout
-        << "[GameController] WARNING: Attempted to dismount null renderable\n";
     return false;
   }
 
-  std::cout << "[GameController] Attempting to dismount renderable at "
-            << element << "\n";
-
   for (size_t i = 0; i < renderables.size(); ++i) {
     if (renderables[i] == element) {
-      std::cout << "[GameController] Found renderable at index " << i << "\n";
-
-      // CRITICAL: Check if this is the countdown before removing
       if (countdown == element) {
-        std::cout << "[GameController] WARNING: Dismounting countdown! Setting "
-                     "to null.\n";
         countdown = nullptr;
         countdownExists = false;
       }
 
-      // Don't delete here - just remove from vector
       renderables.erase(renderables.begin() + i);
-      std::cout << "[GameController] Dismounted renderable. Remaining: "
-                << renderables.size() << "\n";
       return true;
     }
   }
-  std::cout << "[GameController] WARNING: Renderable not found in vector.\n";
   return false;
 }
 
 bool GameController::dismountRenderable(int index) {
   if (index < 0 || index >= static_cast<int>(renderables.size())) {
-    std::cout << "[GameController] ERROR: Invalid renderable index: " << index
-              << "\n";
     return false;
   }
 
-  // Check if we're deleting the countdown
   if (renderables[index] == countdown) {
-    std::cout << "[GameController] WARNING: Dismounting countdown by index!\n";
     countdown = nullptr;
     countdownExists = false;
   }
 
   delete renderables[index];
   renderables.erase(renderables.begin() + index);
-  std::cout << "[GameController] Dismounted renderable at index " << index
-            << ". Remaining: " << renderables.size() << "\n";
   return true;
 }
 
 bool GameController::dismountPhysicsElement(int index) {
   if (index < 0 || index >= static_cast<int>(physicsItems.size())) {
-    std::cout << "[GameController] ERROR: Invalid physics element index: "
-              << index << "\n";
     return false;
   }
   delete physicsItems[index];
   physicsItems.erase(physicsItems.begin() + index);
-  std::cout << "[GameController] Dismounted physics element at index " << index
-            << ". Remaining: " << physicsItems.size() << "\n";
   return true;
 }
 
@@ -176,14 +141,12 @@ PhysicsElement* GameController::getPhysicsElementAt(int index) {
 }
 
 void GameController::run() {
-  std::cout << "[GameController] run() started.\n";
   runinng = true;
 
   sf::Font font;
   bool fontLoaded = false;
   if (font.openFromMemory(fontData, fontData_len)) {
     fontLoaded = true;
-    std::cout << "[GameController] Loaded font from memory.\n";
   }
 
   sf::Text waitingText(font);
@@ -197,7 +160,7 @@ void GameController::run() {
 
   sf::Text wonText(font);
   if (fontLoaded) {
-    wonText.setCharacterSize(48);
+    wonText.setCharacterSize(30);
     wonText.setFillColor(sf::Color::Green);
     wonText.setStyle(sf::Text::Bold);
     wonText.setString("YOU WON!");
@@ -215,9 +178,11 @@ void GameController::run() {
   sf::Time accumulator = sf::Time::Zero;
   sf::Time physicsStep = sf::seconds(1.f / 20.f);
   sf::Time frameLimit = sf::seconds(1.f / 60.f);
-
+  MusicTrack* ga = new MusicTrack();
+  ga->openFromFile("assets/Spacefairer ambient music.mp3");
+  ga->play();
+  ga->setLoop(true);
   while (runinng && globalWindow->isOpen()) {
-    // Event handling
     while (const std::optional event = globalWindow->pollEvent()) {
       if (event->is<sf::Event::Closed>()) {
         globalWindow->close();
@@ -238,7 +203,6 @@ void GameController::run() {
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
           key = sf::Keyboard::Key::Space;
 
-        // Dispatch key to renderables
         for (auto* element : renderables) {
           if (!element) continue;
           sf::Keyboard::Key* listenedKeys = element->getKeyboardEventListners();
@@ -252,7 +216,6 @@ void GameController::run() {
           }
         }
 
-        // Dispatch key to physics items
         for (auto* element : physicsItems) {
           if (!element) continue;
           sf::Keyboard::Key* listenedKeys = element->getKeyboardEventListners();
@@ -271,7 +234,6 @@ void GameController::run() {
       }
     }
 
-    // Mouse input
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
       sf::Vector2i mousePos = sf::Mouse::getPosition(*globalWindow);
       for (auto* element : renderables) {
@@ -286,7 +248,6 @@ void GameController::run() {
       }
     }
 
-    // Physics tick
     sf::Time frameTime = frameClock.restart();
     accumulator += frameTime;
     while (accumulator >= physicsStep) {
@@ -294,15 +255,21 @@ void GameController::run() {
       accumulator -= physicsStep;
     }
 
-    // Clear window
     globalWindow->clear(sf::Color::Black);
 
-    // Draw
     if (physicsItems.empty() && renderables.empty() || won || lost) {
       if (won) {
+        ga->stop();
+        wonText.setString("You successfully delivered " +
+                          std::to_string(cargosRemaining) + "/3 cargo loads");
         globalWindow->draw(wonText);
+        wonText.setPosition({250, 300});
+
       } else if (lost) {
+        ga->stop();
+
         globalWindow->draw(lostText);
+
       } else if (fontLoaded) {
         globalWindow->draw(waitingText);
       } else {
@@ -315,12 +282,9 @@ void GameController::run() {
       drawAll();
     }
 
-    // Display frame
     globalWindow->display();
 
-    // CRITICAL: Update countdown BEFORE incrementing frame counter
     if (gameStarted && countdownExists && countdown != nullptr) {
-      // Verify countdown still exists in renderables
       bool found = false;
       for (const auto* r : renderables) {
         if (r == countdown) {
@@ -338,7 +302,6 @@ void GameController::run() {
         std::string newText =
             "Distance travelled: " + std::to_string(percent) + "%";
 
-        // Check if setText method exists (this will compile-fail if it doesn't)
         countdown->setText(newText);
       } else if (!found) {
         std::cout << "[GameController] Countdown pointer invalid, disabling\n";
@@ -347,24 +310,34 @@ void GameController::run() {
       }
     }
 
-    if (gameStarted) {
+    if (gameStarted && !won && !lost && !won) {
       frameCounter++;
       framesRemaining--;
     }
-    if (framesRemaining == 0) {
+    if (framesRemaining == 0 && !won) {
       won = true;
+      MusicTrack* s = new MusicTrack();
+      s->openFromFile("assets/SFXSpacefairerer_YOUWIN.mp3");
+      s->play();
     }
-    if (hasTask) {
+    if (hasTask && !lost) {
       currentTask->tick();
       if (currentTask->getIsCompleted()) {
         hasTask = false;
       } else if (currentTask->getTicksRemaining() <= 0) {
         if (currentTask->getTaskId() == 3) {
           this->removeCargo();
+
           currentTask->complete();
+          MusicTrack* s = new MusicTrack();
+          s->openFromFile("assets/cargo.mp3");
+          s->play();
           hasTask = false;
           if (this->cargosRemaining == 0) {
             lost = true;
+            MusicTrack* s = new MusicTrack();
+            s->openFromFile("assets/YOULOSE.mp3");
+            s->play();
             lostText.setString(
                 "All cargo lost. Further operation is impractical.");
 
@@ -372,6 +345,9 @@ void GameController::run() {
           }
         } else {
           lost = true;
+          MusicTrack* s = new MusicTrack();
+          s->openFromFile("assets/YOULOSE.mp3");
+          s->play();
           switch (currentTask->getTaskId()) {
             case 1:
               lostText.setString(
@@ -410,7 +386,6 @@ void GameController::run() {
       }
     }
 
-    // Task allocation
     if (frameCounter % 333 == 0 && !hasTask && gameStarted) {
       int randomInRange = rand() % 3;   // 0–2
       int randomInRange2 = rand() % 4;  // 0–3
@@ -435,7 +410,9 @@ void GameController::run() {
       }
 
       setCurrentTask(t);
-      std::cout << "new task" << std::endl;
+      MusicTrack* s = new MusicTrack();
+      s->openFromFile("assets/SFXSpacefairerer_tasks_NewTask.mp3");
+      s->play();
     }
 
     // Frame limiting
@@ -451,13 +428,9 @@ void GameController::run() {
       }
     }
   }
-
-  std::cout << "[GameController] run() exited.\n";
 }
 
 GameController::~GameController() {
-  std::cout << "[GameController] Destructor called. Cleaning up.\n";
-
   // Clear countdown pointer first
   countdown = nullptr;
   countdownExists = false;
@@ -469,7 +442,6 @@ GameController::~GameController() {
     delete globalWindow;
     globalWindow = nullptr;
   }
-  std::cout << "[GameController] Cleanup complete.\n";
 }
 
 void GameController::setCargos(PhysicsElement* c1, PhysicsElement* c2,
@@ -481,7 +453,6 @@ void GameController::setCargos(PhysicsElement* c1, PhysicsElement* c2,
 
 void GameController::removeCargo() {
   if (cargosRemaining <= 0) {
-    std::cout << "[GameController] No cargos remaining to remove.\n";
     return;
   }
 
@@ -494,14 +465,11 @@ void GameController::removeCargo() {
     cargo = cargo3;
 
   if (!cargo) {
-    std::cout << "[GameController] ERROR: Cargo element is null.\n";
     return;
   }
 
   cargo->setVelocity(15.0, -30.0);
   cargosRemaining--;
-  std::cout << "[GameController] Cargo removed. Cargos remaining: "
-            << cargosRemaining << "\n";
 }
 
 void GameController::setNavComputer(RenderElement* nav) { navComputer = nav; }
@@ -521,24 +489,16 @@ void GameController::setCurrentTask(Task* h) {
 void GameController::setHasTask(bool t) { hasTask = t; }
 
 bool GameController::getGameStarted() { return gameStarted; }
-void GameController::setGameStarted(bool g) {
-  std::cout << "[GameController] setGameStarted called with: " << g << "\n";
-  gameStarted = g;
-}
+void GameController::setGameStarted(bool g) { gameStarted = g; }
 
 int GameController::getFramesRemaining() { return framesRemaining; }
 void GameController::setFramesRemaining(int h) { framesRemaining = h; }
 
 void GameController::setCountdown(TextElement* h) {
-  std::cout << "[GameController] setCountdown called with pointer: " << h
-            << "\n";
-
   if (h == nullptr) {
-    std::cout << "[GameController] ERROR: Attempting to set null countdown!\n";
     return;
   }
 
-  // Verify the countdown is in our renderables vector
   bool found = false;
   for (const auto* r : renderables) {
     if (r == h) {
@@ -548,14 +508,11 @@ void GameController::setCountdown(TextElement* h) {
   }
 
   if (!found) {
-    std::cout << "[GameController] ERROR: Countdown not found in renderables! "
-                 "Did you mount it?\n";
     return;
   }
 
   countdown = h;
   countdownExists = true;
-  std::cout << "[GameController] Countdown successfully set\n";
 }
 
 void GameController::setLost(bool l) { lost = l; }

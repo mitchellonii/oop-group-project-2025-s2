@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "GameController.h"
+#include "Sound.h"
 Character::Character()
     : PhysicsElement(),
       isWalkingLeft(false),
@@ -88,7 +89,7 @@ void Character::draw(sf::RenderWindow* globalWindow) {
       currentFrame = (currentFrame + 1) % static_cast<int>(frames.size());
     }
   } else {
-    currentFrame = 0;  // idle
+    currentFrame = 0;
   }
 
   if (frames.empty() || !frames[currentFrame]) return;
@@ -120,41 +121,48 @@ void Character::stop() {
 }
 
 void Character::handleInput() {
-  // Log start of input handling
-  std::cout << "[DEBUG] Handling input for Character at position x=" << x
-            << ", heldItem=" << heldItem << std::endl;
-
-  // Movement input
+  counter++;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-    std::cout << "[DEBUG] Key A pressed -> Moving Left" << std::endl;
     this->moveLeft();
+    if (counter % 5 == 0) {
+      MusicTrack* s = new MusicTrack();
+      s->openFromFile("assets/footstep.mp3");
+      s->play();
+    }
+
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-    std::cout << "[DEBUG] Key D pressed -> Moving Right" << std::endl;
     this->moveRight();
+    if (counter % 5 == 0) {
+      MusicTrack* s = new MusicTrack();
+      s->openFromFile("assets/footstep.mp3");
+      s->play();
+    }
+
   } else {
-    std::cout << "[DEBUG] No horizontal key pressed -> Stopping" << std::endl;
     stop();
   }
 
-  // Interaction input
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
-    std::cout << "[DEBUG] Key E pressed -> Attempting interaction" << std::endl;
-
     int currentTaskId = controller->getCurrentTask()
                             ? controller->getCurrentTask()->getTaskId()
                             : -1;
 
     if (240 < x && x < 320 && currentTaskId == 1 && this->heldItem == "none") {
       this->heldItem = "toolbox";
-      std::cout << "[DEBUG] Picked up toolbox!" << std::endl;
+      MusicTrack* s = new MusicTrack();
+      s->openFromFile(
+          "assets/SFXSpacefairerer_tasks_Rail fixing_PickupTools.mp3");
+      s->play();
     } else if (this->heldItem == "toolbox" && currentTaskId == 1 && x > 650) {
-      std::cout << "placed toolbox down in acceptable location" << std::endl;
       this->heldItem = "none";
       controller->getToolbox()->setPosition(287, 390);
       controller->getCurrentTask()->complete();
+      MusicTrack* s = new MusicTrack();
+      s->openFromFile(
+          "assets/SFXSpacefairerer_tasks_Rail fixing_rail fixing.mp3");
+      s->play();
+
     } else {
-      std::cout << "[DEBUG] Interaction failed: conditions not met"
-                << std::endl;
     }
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
@@ -165,8 +173,11 @@ void Character::handleInput() {
 
     if (x < 200 && currentTaskId == 2 && this->heldItem == "none" &&
         currentTaskDir == "up") {
-      std::cout << "fixed navs" << std::endl;
       controller->getCurrentTask()->complete();
+      MusicTrack* s = new MusicTrack();
+      s->openFromFile(
+          "assets/SFXSpacefairerer_tasks_CourseCorrection_TaskProgressBar.mp3");
+      s->play();
     }
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
@@ -177,8 +188,11 @@ void Character::handleInput() {
 
     if (x < 200 && currentTaskId == 2 && this->heldItem == "none" &&
         currentTaskDir == "down") {
-      std::cout << "fixed navs" << std::endl;
       controller->getCurrentTask()->complete();
+      MusicTrack* s = new MusicTrack();
+      s->openFromFile(
+          "assets/SFXSpacefairerer_tasks_CourseCorrection_TaskProgressBar.mp3");
+      s->play();
     }
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
@@ -189,8 +203,11 @@ void Character::handleInput() {
 
     if (x < 200 && currentTaskId == 2 && this->heldItem == "none" &&
         currentTaskDir == "left") {
-      std::cout << "fixed navs" << std::endl;
       controller->getCurrentTask()->complete();
+      MusicTrack* s = new MusicTrack();
+      s->openFromFile(
+          "assets/SFXSpacefairerer_tasks_CourseCorrection_TaskProgressBar.mp3");
+      s->play();
     }
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
@@ -201,14 +218,13 @@ void Character::handleInput() {
 
     if (x < 200 && currentTaskId == 2 && this->heldItem == "none" &&
         currentTaskDir == "right") {
-      std::cout << "fixed navs" << std::endl;
       controller->getCurrentTask()->complete();
+      MusicTrack* s = new MusicTrack();
+      s->openFromFile(
+          "assets/SFXSpacefairerer_tasks_CourseCorrection_TaskProgressBar.mp3");
+      s->play();
     }
   }
-
-  // Log end of input handling
-  std::cout << "[DEBUG] Input handling complete for Character. Current state: "
-            << "x=" << x << ", heldItem=" << heldItem << std::endl;
 }
 
 bool Character::hasItem() const { return !heldItem.empty(); }

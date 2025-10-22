@@ -3,7 +3,6 @@
 #include "GameController.h"
 Task::Task() : taskId(-1), timeTaken(5), toolsNeeded(false) {}
 
-// Add a constructor that takes an ID
 Task::Task(int id, int timeTaken, bool toolsNeeded, GameController *c)
     : taskId(id),
       timeTaken(timeTaken),
